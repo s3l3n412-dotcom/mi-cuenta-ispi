@@ -1,0 +1,2458 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi Cuenta ISPI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #111827;
+            color: #f9fafb;
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        body.light {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* APP */
+
+        #app {
+            width: 100%;
+            max-width: 430px;
+            min-height: 100dvh;
+            margin: auto;
+            background: #1f2937;
+            padding-bottom: 80px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body.light #app {
+            background: #ffffff;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #111827;
+            padding: 18px;
+            border-bottom: 1px solid #374151;
+        }
+
+        body.light header {
+            background: #ffffff;
+            border-color: #e5e7eb;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .theme-button {
+            border: none;
+            background: #374151;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+
+        body.light .theme-button {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        /* STATUS */
+
+        .status-bar {
+            padding: 8px 18px;
+            background: #172033;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        body.light .status-bar {
+            background: #f3f4f6;
+        }
+
+        .status-online {
+            color: #4ade80;
+        }
+
+        /* CONTENEDOR DE PAGINAS */
+
+        #views {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .view {
+            display: none;
+            padding: 20px;
+            animation: slideIn 0.25s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        }
+
+        /* TITULOS */
+
+        .page-title {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #9ca3af;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        body.light .page-subtitle {
+            color: #6b7280;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        body.light .card {
+            background: #ffffff;
+            border-color: #e5e7eb;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: none;
+        }
+
+        .welcome-card h2 {
+            margin-bottom: 8px;
+        }
+
+        /* FORMULARIOS */
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 7px;
+            color: #d1d5db;
+        }
+
+        body.light label {
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: 1px solid #4b5563;
+            background: #111827;
+            color: white;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+        }
+
+        body.light input {
+            background: white;
+            color: #111827;
+            border-color: #d1d5db;
+        }
+
+        /* BOTONES */
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-comprobante {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn-comprobante:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-disabled {
+            background: #4b5563;
+            color: #d1d5db;
+            cursor: default;
+        }
+
+        /* ERROR */
+
+        .error {
+            display: none;
+            background: #7f1d1d;
+            color: #fecaca;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        /* DATOS DEL ALUMNO */
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .profile-item {
+            background: #1f2937;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        body.light .profile-item {
+            background: #f3f4f6;
+        }
+
+        .profile-item small {
+            display: block;
+            color: #9ca3af;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .profile-item strong {
+            font-size: 14px;
+        }
+
+        /* TABLA */
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 11px 9px;
+            text-align: left;
+            border-bottom: 1px solid #374151;
+            font-size: 13px;
+        }
+
+        body.light th,
+        body.light td {
+            border-color: #e5e7eb;
+        }
+
+        th {
+            color: #93c5fd;
+            font-size: 12px;
+        }
+
+        body.light th {
+            color: #2563eb;
+        }
+
+        /* ESTADOS */
+
+        .estado {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .estado.pagada {
+            background: #14532d;
+            color: #86efac;
+        }
+
+        .estado.pendiente {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
+        /* SALDO */
+
+        .saldo-card {
+            background: #172033;
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 16px;
+            border: 1px solid #374151;
+        }
+
+        body.light .saldo-card {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .saldo-title {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .saldo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .saldo.ok {
+            color: #4ade80;
+        }
+
+        .saldo.deuda {
+            color: #f87171;
+        }
+
+        /* AVISO */
+
+        .notice {
+            background: #172554;
+            border: 1px solid #1d4ed8;
+            padding: 13px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #bfdbfe;
+        }
+
+        body.light .notice {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        /* RESUMEN */
+
+        .summary-box {
+            background: #111827;
+            border: 1px solid #374151;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        body.light .summary-box {
+            background: #ffffff;
+            border-color: #e5e7eb;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #374151;
+        }
+
+        body.light .summary-row {
+            border-color: #e5e7eb;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        /* NOTIFICACIONES */
+
+        .notification {
+            background: #111827;
+            border: 1px solid #374151;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        body.light .notification {
+            background: white;
+            border-color: #e5e7eb;
+        }
+
+        .notification strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .notification small {
+            color: #9ca3af;
+        }
+
+        /* AYUDA */
+
+        .help-item {
+            margin-bottom: 18px;
+        }
+
+        .help-item h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .help-item p {
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        body.light .help-item p {
+            color: #4b5563;
+        }
+
+        /* NAVEGACION INFERIOR */
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            height: 68px;
+            background: #111827;
+            border-top: 1px solid #374151;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            z-index: 50;
+        }
+
+        body.light .bottom-nav {
+            background: white;
+            border-color: #e5e7eb;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .nav-btn span {
+            font-size: 21px;
+        }
+
+        .nav-btn.active {
+            color: #60a5fa;
+        }
+
+        /* LOADING */
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+        }
+
+        /* DESLIZAMIENTO */
+
+        .swipe-hint {
+            text-align: center;
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 360px) {
+
+            .view {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="header-content">
+
+            <div class="logo">
+                Mi Cuenta <span>ISPI</span>
+            </div>
+
+            <button
+                class="theme-button"
+                id="btn-theme"
+                title="Cambiar tema">
+                🌙
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ESTADO -->
+
+    <div class="status-bar">
+
+        <span id="status-text">
+            ● Sistema listo
+        </span>
+
+    </div>
+
+
+    <!-- PAGINAS -->
+
+    <main id="views">
+
+
+        <!-- ========================= -->
+        <!-- INICIO -->
+        <!-- ========================= -->
+
+        <section
+            class="view active"
+            data-view="inicio">
+
+            <h1 class="page-title">
+                Mi Cuenta ISPI
+            </h1>
+
+            <p class="page-subtitle">
+                Consultá tu información académica y tus cuotas.
+            </p>
+
+
+            <div class="card welcome-card">
+
+                <h2>
+                    ¡Bienvenido/a!
+                </h2>
+
+                <p>
+                    Ingresá tu DNI para consultar tu cuenta.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <label for="documento">
+                    DNI
+                </label>
+
+                <input
+                    type="text"
+                    id="documento"
+                    placeholder="Ej: 45505063"
+                    inputmode="numeric"
+                    maxlength="8"
+                    autocomplete="off">
+
+                <button
+                    class="btn btn-primary"
+                    id="btn-entrar">
+
+                    🔎 Consultar mi cuenta
+
+                </button>
+
+                <div
+                    id="login-error"
+                    class="error">
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <strong>
+                    ¿Qué podés consultar?
+                </strong>
+
+                <br><br>
+
+                <p style="line-height:1.6;color:#9ca3af;font-size:14px;">
+                    • Datos personales<br>
+                    • Carrera y curso<br>
+                    • Cuotas<br>
+                    • Estado de pago<br>
+                    • Saldo pendiente<br>
+                    • Comprobantes de cuotas pagadas
+                </p>
+
+            </div>
+
+
+            <div class="swipe-hint">
+                Deslizá hacia los costados para navegar
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================= -->
+        <!-- PERFIL -->
+        <!-- ========================= -->
+
+        <section
+            class="view"
+            data-view="perfil">
+
+            <h1 class="page-title">
+                Mi cuenta
+            </h1>
+
+            <p class="page-subtitle">
+                Información del estudiante
+            </p>
+
+
+            <!-- DATOS -->
+
+            <div class="card">
+
+                <div class="profile-grid">
+
+                    <div class="profile-item">
+
+                        <small>
+                            Nombre
+                        </small>
+
+                        <strong id="p-nombre">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <small>
+                            Apellido
+                        </small>
+
+                        <strong id="p-apellido">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <small>
+                            DNI
+                        </small>
+
+                        <strong id="p-dni">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <small>
+                            Carrera
+                        </small>
+
+                        <strong id="p-carrera">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <small>
+                            Curso
+                        </small>
+
+                        <strong id="p-curso">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CUOTAS -->
+
+            <div class="card">
+
+                <h2 style="margin-bottom:15px;">
+                    Mis cuotas
+                </h2>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Concepto
+                                </th>
+
+                                <th>
+                                    Vencimiento
+                                </th>
+
+                                <th>
+                                    Importe
+                                </th>
+
+                                <th>
+                                    Estado
+                                </th>
+
+                                <th>
+                                    Comprobante
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="cuotas-body">
+
+                            <tr>
+
+                                <td colspan="5">
+                                    No hay datos todavía.
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SALDO -->
+
+            <div class="saldo-card">
+
+                <div class="saldo-title">
+                    Saldo pendiente
+                </div>
+
+                <div
+                    id="saldo"
+                    class="saldo">
+
+                    $0
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RESUMEN -->
+
+            <button
+                class="btn btn-success"
+                id="btn-resumen">
+
+                📄 Ver / descargar resumen de cuotas
+
+            </button>
+
+
+
+            <!-- CERRAR SESION -->
+
+            <button
+                class="btn btn-danger"
+                id="btn-salir">
+
+                🚪 Cerrar sesión
+
+            </button>
+
+
+
+            <div
+                class="notice"
+                id="aviso-texto">
+
+                La información se obtiene desde el sistema académico.
+
+            </div>
+
+
+            <div class="swipe-hint">
+                Deslizá para cambiar de sección
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================= -->
+        <!-- NOTIFICACIONES -->
+        <!-- ========================= -->
+
+        <section
+            class="view"
+            data-view="notificaciones">
+
+            <h1 class="page-title">
+                Notificaciones
+            </h1>
+
+            <p class="page-subtitle">
+                Avisos importantes de tu cuenta.
+            </p>
+
+
+            <div id="notificaciones-list">
+
+                <div class="notification">
+
+                    <strong>
+                        📚 Bienvenido/a
+                    </strong>
+
+                    <p>
+                        Ya podés consultar tus datos académicos desde Mi Cuenta ISPI.
+                    </p>
+
+                    <small>
+                        Sistema
+                    </small>
+
+                </div>
+
+
+                <div class="notification">
+
+                    <strong>
+                        💰 Estado de cuotas
+                    </strong>
+
+                    <p>
+                        Recordá revisar periódicamente el estado de tus cuotas.
+                    </p>
+
+                    <small>
+                        Administración
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================= -->
+        <!-- AYUDA -->
+        <!-- ========================= -->
+
+        <section
+            class="view"
+            data-view="ayuda">
+
+            <h1 class="page-title">
+                Ayuda
+            </h1>
+
+            <p class="page-subtitle">
+                Información sobre el funcionamiento de la aplicación.
+            </p>
+
+
+            <div class="card">
+
+                <div class="help-item">
+
+                    <h3>
+                        🔎 ¿Cómo consultar mi cuenta?
+                    </h3>
+
+                    <p>
+                        Ingresá tu DNI en la pantalla de inicio y presioná
+                        "Consultar mi cuenta".
+                    </p>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <h3>
+                        💰 ¿Qué significa saldo pendiente?
+                    </h3>
+
+                    <p>
+                        Es la suma de las cuotas que todavía figuran como
+                        pendientes de pago.
+                    </p>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <h3>
+                        🧾 ¿Cómo descargar un comprobante?
+                    </h3>
+
+                    <p>
+                        En la sección "Mi cuenta", las cuotas pagadas tienen
+                        un botón para generar su comprobante.
+                    </p>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <h3>
+                        📄 ¿Cómo descargar el resumen?
+                    </h3>
+
+                    <p>
+                        Presioná el botón "Ver / descargar resumen de cuotas".
+                        Se abrirá un documento que podés guardar o imprimir
+                        como PDF.
+                    </p>
+
+                </div>
+
+
+                <div class="help-item">
+
+                    <h3>
+                        🖥️ Tecnología utilizada
+                    </h3>
+
+                    <p>
+                        La aplicación utiliza HTML, CSS y JavaScript en el
+                        frontend, Node.js y Express en el backend, y
+                        Supabase/PostgreSQL para almacenar los datos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ========================= -->
+    <!-- NAVEGACION -->
+    <!-- ========================= -->
+
+    <nav class="bottom-nav">
+
+        <button
+            class="nav-btn active"
+            data-view="inicio">
+
+            <span>🏠</span>
+            Inicio
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-view="perfil">
+
+            <span>👤</span>
+            Mi cuenta
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-view="notificaciones">
+
+            <span>🔔</span>
+            Avisos
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-view="ayuda">
+
+            <span>❓</span>
+            Ayuda
+
+        </button>
+
+    </nav>
+
+</div>
+
+
+
+<script>
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    const $ = selector => document.querySelector(selector);
+
+    let alumnoActual = null;
+    let cuotasActuales = [];
+    let dniActual = null;
+
+
+    /* =====================================================
+       CAMBIAR PAGINAS
+    ===================================================== */
+
+    function mostrarVista(nombreVista) {
+
+        document.querySelectorAll(".view").forEach(view => {
+
+            view.classList.remove("active");
+
+        });
+
+
+        const vista = document.querySelector(
+            `.view[data-view="${nombreVista}"]`
+        );
+
+
+        if (vista) {
+
+            vista.classList.add("active");
+
+        }
+
+
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+
+            btn.classList.toggle(
+                "active",
+                btn.dataset.view === nombreVista
+            );
+
+        });
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* =====================================================
+       BOTONES DE NAVEGACION
+    ===================================================== */
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            mostrarVista(btn.dataset.view);
+
+        });
+
+    });
+
+
+
+    /* =====================================================
+       CONSULTAR CUENTA
+    ===================================================== */
+
+    $("#btn-entrar").addEventListener("click", consultarCuenta);
+
+
+    $("#documento").addEventListener("keydown", event => {
+
+        if (event.key === "Enter") {
+
+            consultarCuenta();
+
+        }
+
+    });
+
+
+
+    async function consultarCuenta() {
+
+        const dni = $("#documento").value.trim();
+
+        const errorBox = $("#login-error");
+
+        errorBox.classList.remove("show");
+
+        errorBox.textContent = "";
+
+
+        /* VALIDACION DNI */
+
+        if (!/^\d{7,8}$/.test(dni)) {
+
+            mostrarError(
+                "Ingresá un DNI válido de 7 u 8 números."
+            );
+
+            return;
+
+        }
+
+
+        $("#btn-entrar").disabled = true;
+
+        $("#btn-entrar").textContent = "Consultando...";
+
+
+        $("#status-text").innerHTML =
+            '<span class="status-online">● Consultando información...</span>';
+
+
+        try {
+
+            const respuesta = await fetch(
+                `/api/cuenta/${dni}`
+            );
+
+
+            const datos = await respuesta.json();
+
+
+            if (!respuesta.ok) {
+
+                throw new Error(
+                    datos.error || "No se pudo consultar la cuenta."
+                );
+
+            }
+
+
+            /* GUARDAMOS DATOS */
+
+            alumnoActual = datos.alumno;
+
+            cuotasActuales = datos.cuotas || [];
+
+            dniActual = dni;
+
+
+            /* MOSTRAMOS DATOS */
+
+            renderAlumno();
+
+            renderCuotas();
+
+            renderSaldo();
+
+
+            /* CAMBIAMOS A PERFIL */
+
+            mostrarVista("perfil");
+
+
+            $("#status-text").innerHTML =
+                '<span class="status-online">● Conectado</span>';
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            mostrarError(
+                error.message ||
+                "Ocurrió un error al consultar la cuenta."
+            );
+
+
+            $("#status-text").textContent =
+                "● Error de conexión";
+
+        } finally {
+
+            $("#btn-entrar").disabled = false;
+
+            $("#btn-entrar").textContent =
+                "🔎 Consultar mi cuenta";
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       MOSTRAR ERROR
+    ===================================================== */
+
+    function mostrarError(mensaje) {
+
+        const errorBox = $("#login-error");
+
+        errorBox.textContent = mensaje;
+
+        errorBox.classList.add("show");
+
+    }
+
+
+
+    /* =====================================================
+       MOSTRAR DATOS DEL ALUMNO
+    ===================================================== */
+
+    function renderAlumno() {
+
+        if (!alumnoActual) return;
+
+
+        $("#p-nombre").textContent =
+            alumnoActual.nombre || "-";
+
+
+        $("#p-apellido").textContent =
+            alumnoActual.apellido || "-";
+
+
+        $("#p-dni").textContent =
+            alumnoActual.dni || "-";
+
+
+        $("#p-carrera").textContent =
+            alumnoActual.carrera || "-";
+
+
+        $("#p-curso").textContent =
+            alumnoActual.curso || "-";
+
+    }
+
+
+
+    /* =====================================================
+       FORMATEAR DINERO
+    ===================================================== */
+
+    function dinero(valor) {
+
+        return new Intl.NumberFormat(
+            "es-AR",
+            {
+                style: "currency",
+                currency: "ARS",
+                minimumFractionDigits: 2
+            }
+        ).format(Number(valor) || 0);
+
+    }
+
+
+
+    /* =====================================================
+       FORMATEAR FECHA
+    ===================================================== */
+
+    function formatearFecha(fecha) {
+
+        if (!fecha) return "-";
+
+
+        const partes = String(fecha).split("-");
+
+
+        if (partes.length === 3) {
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+        }
+
+
+        return fecha;
+
+    }
+
+
+
+    /* =====================================================
+       OBTENER IMPORTE
+    ===================================================== */
+
+    function obtenerImporte(cuota) {
+
+        /*
+          Tu tabla de Supabase tiene una columna llamada
+          literalmente "cuota.importe".
+        */
+
+        return Number(
+            cuota["cuota.importe"] ?? 0
+        );
+
+    }
+
+
+
+    /* =====================================================
+       MOSTRAR CUOTAS
+    ===================================================== */
+
+    function renderCuotas() {
+
+        const tbody = $("#cuotas-body");
+
+
+        tbody.innerHTML = "";
+
+
+        if (!cuotasActuales.length) {
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td colspan="5">
+                        No hay cuotas registradas.
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        cuotasActuales.forEach(cuota => {
+
+            const tr = document.createElement("tr");
+
+
+            const pagada = Boolean(
+                cuota.pagado
+            );
+
+
+            const estado = pagada
+                ? "Pagada"
+                : "Pendiente";
+
+
+            const claseEstado = pagada
+                ? "pagada"
+                : "pendiente";
+
+
+            let comprobante = "";
+
+
+            if (pagada) {
+
+                comprobante = `
+
+                    <button
+                        class="btn-comprobante"
+                        onclick="descargarComprobante(${cuota.id})">
+
+                        🧾 Descargar
+
+                    </button>
+
+                `;
+
+            } else {
+
+                comprobante = `
+
+                    <span style="color:#6b7280;">
+                        No disponible
+                    </span>
+
+                `;
+
+            }
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHTML(
+                        cuota.concepto || "Cuota"
+                    )}
+                </td>
+
+                <td>
+                    ${formatearFecha(
+                        cuota.vencimiento
+                    )}
+                </td>
+
+                <td>
+                    ${dinero(
+                        obtenerImporte(cuota)
+                    )}
+                </td>
+
+                <td>
+
+                    <span class="estado ${claseEstado}">
+                        ${estado}
+                    </span>
+
+                </td>
+
+                <td>
+                    ${comprobante}
+                </td>
+
+            `;
+
+
+            tbody.appendChild(tr);
+
+        });
+
+    }
+
+
+
+    /* =====================================================
+       ESCAPAR HTML
+    ===================================================== */
+
+    function escapeHTML(texto) {
+
+        return String(texto)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
+    }
+
+
+
+    /* =====================================================
+       CALCULAR SALDO
+    ===================================================== */
+
+    function calcularSaldo() {
+
+        return cuotasActuales
+            .filter(cuota => !Boolean(cuota.pagado))
+            .reduce(
+                (total, cuota) =>
+                    total + obtenerImporte(cuota),
+                0
+            );
+
+    }
+
+
+
+    /* =====================================================
+       MOSTRAR SALDO
+    ===================================================== */
+
+    function renderSaldo() {
+
+        const saldo = calcularSaldo();
+
+        const elemento = $("#saldo");
+
+
+        elemento.textContent =
+            dinero(saldo);
+
+
+        elemento.classList.remove(
+            "ok",
+            "deuda"
+        );
+
+
+        if (saldo > 0) {
+
+            elemento.classList.add("deuda");
+
+            $("#aviso-texto").textContent =
+                "Tenés cuotas pendientes de pago.";
+
+        } else {
+
+            elemento.classList.add("ok");
+
+            $("#aviso-texto").textContent =
+                "¡Excelente! No tenés cuotas pendientes.";
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       DESCARGAR COMPROBANTE DE UNA CUOTA
+    ===================================================== */
+
+    function descargarComprobante(idCuota) {
+
+        const cuota = cuotasActuales.find(
+            c => Number(c.id) === Number(idCuota)
+        );
+
+
+        if (!cuota) {
+
+            alert(
+                "No se encontró la cuota."
+            );
+
+            return;
+
+        }
+
+
+        if (!Boolean(cuota.pagado)) {
+
+            alert(
+                "Esta cuota todavía figura como pendiente."
+            );
+
+            return;
+
+        }
+
+
+        const nombreCompleto =
+            `${alumnoActual.nombre || ""} ${alumnoActual.apellido || ""}`
+                .trim();
+
+
+        const importe =
+            obtenerImporte(cuota);
+
+
+        const fechaPago =
+            formatearFecha(cuota.vencimiento);
+
+
+        const documento = crearDocumentoHTML(
+
+            "Comprobante de cuota pagada",
+
+            `
+
+                <div class="comprobante">
+
+                    <h1>
+                        MI CUENTA ISPI
+                    </h1>
+
+                    <h2>
+                        COMPROBANTE DE PAGO
+                    </h2>
+
+                    <hr>
+
+                    <p>
+                        <strong>Alumno:</strong>
+                        ${escapeHTML(nombreCompleto)}
+                    </p>
+
+                    <p>
+                        <strong>DNI:</strong>
+                        ${escapeHTML(alumnoActual.dni || "")}
+                    </p>
+
+                    <p>
+                        <strong>Carrera:</strong>
+                        ${escapeHTML(alumnoActual.carrera || "")}
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Concepto:</strong>
+                        ${escapeHTML(cuota.concepto || "Cuota")}
+                    </p>
+
+                    <p>
+                        <strong>Vencimiento:</strong>
+                        ${fechaPago}
+                    </p>
+
+                    <p>
+                        <strong>Importe:</strong>
+                        ${dinero(importe)}
+                    </p>
+
+                    <p>
+                        <strong>Estado:</strong>
+                        PAGADA
+                    </p>
+
+                    <div class="pagada">
+                        ✔ CUOTA PAGADA
+                    </div>
+
+                    <hr>
+
+                    <p class="footer">
+                        Comprobante generado desde Mi Cuenta ISPI.
+                    </p>
+
+                </div>
+
+            `
+
+        );
+
+
+        descargarHTML(
+            documento,
+            `comprobante-cuota-${cuota.id}.html`
+        );
+
+    }
+
+
+
+    /* =====================================================
+       BOTON RESUMEN
+    ===================================================== */
+
+    $("#btn-resumen").addEventListener(
+        "click",
+        descargarResumen
+    );
+
+
+
+    /* =====================================================
+       DESCARGAR RESUMEN
+    ===================================================== */
+
+    function descargarResumen() {
+
+        if (!alumnoActual) {
+
+            alert(
+                "Primero tenés que consultar una cuenta."
+            );
+
+            return;
+
+        }
+
+
+        const saldo =
+            calcularSaldo();
+
+
+        let filas = "";
+
+
+        cuotasActuales.forEach(cuota => {
+
+            const pagada =
+                Boolean(cuota.pagado);
+
+
+            filas += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(
+                            cuota.concepto || "Cuota"
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatearFecha(
+                            cuota.vencimiento
+                        )}
+                    </td>
+
+                    <td>
+                        ${dinero(
+                            obtenerImporte(cuota)
+                        )}
+                    </td>
+
+                    <td>
+                        ${
+                            pagada
+                                ? "PAGADA"
+                                : "PENDIENTE"
+                        }
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        const nombreCompleto =
+            `${alumnoActual.nombre || ""} ${alumnoActual.apellido || ""}`
+                .trim();
+
+
+        const documento =
+            crearDocumentoHTML(
+
+                "Resumen de cuotas",
+
+                `
+
+                <div class="resumen">
+
+                    <h1>
+                        MI CUENTA ISPI
+                    </h1>
+
+                    <h2>
+                        RESUMEN DE CUOTAS
+                    </h2>
+
+                    <hr>
+
+                    <p>
+                        <strong>Alumno:</strong>
+                        ${escapeHTML(nombreCompleto)}
+                    </p>
+
+                    <p>
+                        <strong>DNI:</strong>
+                        ${escapeHTML(alumnoActual.dni || "")}
+                    </p>
+
+                    <p>
+                        <strong>Carrera:</strong>
+                        ${escapeHTML(alumnoActual.carrera || "")}
+                    </p>
+
+                    <p>
+                        <strong>Curso:</strong>
+                        ${escapeHTML(String(alumnoActual.curso || ""))}
+                    </p>
+
+                    <br>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Concepto
+                                </th>
+
+                                <th>
+                                    Vencimiento
+                                </th>
+
+                                <th>
+                                    Importe
+                                </th>
+
+                                <th>
+                                    Estado
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            ${filas}
+
+                        </tbody>
+
+                    </table>
+
+                    <div class="total">
+
+                        SALDO PENDIENTE:
+                        ${dinero(saldo)}
+
+                    </div>
+
+                    <hr>
+
+                    <p class="footer">
+                        Resumen generado desde Mi Cuenta ISPI.
+                    </p>
+
+                </div>
+
+                `
+
+            );
+
+
+        descargarHTML(
+            documento,
+            `resumen-cuotas-${alumnoActual.dni}.html`
+        );
+
+    }
+
+
+
+    /* =====================================================
+       CREAR DOCUMENTO HTML
+    ===================================================== */
+
+    function crearDocumentoHTML(
+        titulo,
+        contenido
+    ) {
+
+        return `
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>${titulo}</title>
+
+<style>
+
+    body {
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        max-width: 800px;
+
+        margin: 40px auto;
+
+        padding: 20px;
+
+        color: #111827;
+
+    }
+
+    h1 {
+
+        text-align: center;
+
+        margin-bottom: 5px;
+
+    }
+
+    h2 {
+
+        text-align: center;
+
+        font-size: 20px;
+
+        margin-bottom: 25px;
+
+    }
+
+    hr {
+
+        margin: 20px 0;
+
+        border: none;
+
+        border-top: 1px solid #ccc;
+
+    }
+
+    p {
+
+        margin: 10px 0;
+
+        line-height: 1.5;
+
+    }
+
+    table {
+
+        width: 100%;
+
+        border-collapse: collapse;
+
+        margin-top: 20px;
+
+    }
+
+    th,
+    td {
+
+        border: 1px solid #ccc;
+
+        padding: 10px;
+
+        text-align: left;
+
+    }
+
+    th {
+
+        background: #f3f4f6;
+
+    }
+
+    .pagada {
+
+        text-align: center;
+
+        margin: 30px 0;
+
+        padding: 15px;
+
+        border: 2px solid #16a34a;
+
+        color: #15803d;
+
+        font-weight: bold;
+
+        font-size: 20px;
+
+    }
+
+    .total {
+
+        margin-top: 25px;
+
+        padding: 15px;
+
+        background: #f3f4f6;
+
+        font-size: 20px;
+
+        font-weight: bold;
+
+        text-align: right;
+
+    }
+
+    .footer {
+
+        text-align: center;
+
+        color: #6b7280;
+
+        font-size: 12px;
+
+    }
+
+    @media print {
+
+        body {
+
+            margin: 0;
+
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+${contenido}
+
+<br><br>
+
+<div style="text-align:center;">
+
+    <button
+        onclick="window.print()"
+        style="
+            padding:12px 20px;
+            border:none;
+            background:#2563eb;
+            color:white;
+            border-radius:8px;
+            cursor:pointer;
+        ">
+
+        🖨️ Imprimir / Guardar como PDF
+
+    </button>
+
+</div>
+
+</body>
+
+</html>
+
+        `;
+
+    }
+
+
+
+    /* =====================================================
+       DESCARGAR ARCHIVO HTML
+    ===================================================== */
+
+    function descargarHTML(
+        contenido,
+        nombreArchivo
+    ) {
+
+        const blob = new Blob(
+            [contenido],
+            {
+                type: "text/html;charset=utf-8"
+            }
+        );
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        const enlace =
+            document.createElement("a");
+
+
+        enlace.href = url;
+
+        enlace.download =
+            nombreArchivo;
+
+
+        document.body.appendChild(
+            enlace
+        );
+
+
+        enlace.click();
+
+
+        enlace.remove();
+
+
+        URL.revokeObjectURL(url);
+
+    }
+
+
+
+    /* =====================================================
+       CERRAR SESION
+    ===================================================== */
+
+    $("#btn-salir").addEventListener(
+        "click",
+        cerrarSesion
+    );
+
+
+    function cerrarSesion() {
+
+        alumnoActual = null;
+
+        cuotasActuales = [];
+
+        dniActual = null;
+
+
+        $("#documento").value = "";
+
+        $("#p-nombre").textContent = "-";
+
+        $("#p-apellido").textContent = "-";
+
+        $("#p-dni").textContent = "-";
+
+        $("#p-carrera").textContent = "-";
+
+        $("#p-curso").textContent = "-";
+
+        $("#cuotas-body").innerHTML = `
+
+            <tr>
+
+                <td colspan="5">
+                    No hay datos todavía.
+                </td>
+
+            </tr>
+
+        `;
+
+
+        $("#saldo").textContent =
+            "$0";
+
+
+        $("#saldo").classList.remove(
+            "ok",
+            "deuda"
+        );
+
+
+        $("#status-text").textContent =
+            "● Sistema listo";
+
+
+        mostrarVista("inicio");
+
+    }
+
+
+
+    /* =====================================================
+       MODO OSCURO / CLARO
+    ===================================================== */
+
+    $("#btn-theme").addEventListener(
+        "click",
+        () => {
+
+            document.body.classList.toggle(
+                "light"
+            );
+
+
+            const esClaro =
+                document.body.classList.contains(
+                    "light"
+                );
+
+
+            $("#btn-theme").textContent =
+                esClaro
+                    ? "☀️"
+                    : "🌙";
+
+        }
+    );
+
+
+
+    /* =====================================================
+       DESLIZAMIENTO ENTRE PAGINAS
+    ===================================================== */
+
+    let touchStartX = 0;
+
+    let touchStartY = 0;
+
+
+    const ordenVistas = [
+        "inicio",
+        "perfil",
+        "notificaciones",
+        "ayuda"
+    ];
+
+
+    $("#views").addEventListener(
+        "touchstart",
+        event => {
+
+            const touch =
+                event.changedTouches[0];
+
+
+            touchStartX =
+                touch.screenX;
+
+
+            touchStartY =
+                touch.screenY;
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    $("#views").addEventListener(
+        "touchend",
+        event => {
+
+            const touch =
+                event.changedTouches[0];
+
+
+            const diferenciaX =
+                touch.screenX -
+                touchStartX;
+
+
+            const diferenciaY =
+                touch.screenY -
+                touchStartY;
+
+
+            /*
+              Solo consideramos un gesto horizontal.
+            */
+
+            if (
+                Math.abs(diferenciaX) < 70 ||
+                Math.abs(diferenciaX) <
+                Math.abs(diferenciaY)
+            ) {
+
+                return;
+
+            }
+
+
+            const vistaActual =
+                document.querySelector(
+                    ".view.active"
+                );
+
+
+            if (!vistaActual) return;
+
+
+            const nombreActual =
+                vistaActual.dataset.view;
+
+
+            const posicion =
+                ordenVistas.indexOf(
+                    nombreActual
+                );
+
+
+            let nuevaPosicion =
+                posicion;
+
+
+            /* DESLIZAR IZQUIERDA */
+
+            if (diferenciaX < 0) {
+
+                nuevaPosicion =
+                    Math.min(
+                        posicion + 1,
+                        ordenVistas.length - 1
+                    );
+
+            }
+
+
+            /* DESLIZAR DERECHA */
+
+            else {
+
+                nuevaPosicion =
+                    Math.max(
+                        posicion - 1,
+                        0
+                    );
+
+            }
+
+
+            if (
+                nuevaPosicion !== posicion
+            ) {
+
+                mostrarVista(
+                    ordenVistas[nuevaPosicion]
+                );
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+
+    /* =====================================================
+       INICIO
+    ===================================================== */
+
+    console.log(
+        "Mi Cuenta ISPI iniciado correctamente"
+    );
+
+</script>
+
+</body>
+</html>
