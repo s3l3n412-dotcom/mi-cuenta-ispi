@@ -3,19 +3,18 @@ const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 const app = express();
-const PORT = 3000;
 
 
-/* ==========================================
-   SERVIR LOS ARCHIVOS DEL FRONTEND
-========================================== */
+// ==========================================
+// SERVIR LOS ARCHIVOS DEL FRONTEND
+// ==========================================
 
 app.use(express.static("public"));
 
 
-/* ==========================================
-   CONEXIÓN CON SUPABASE
-========================================== */
+// ==========================================
+// CONEXIÓN CON SUPABASE
+// ==========================================
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -23,9 +22,9 @@ const supabase = createClient(
 );
 
 
-/* ==========================================
-   PÁGINA PRINCIPAL
-========================================== */
+// ==========================================
+// PÁGINA PRINCIPAL
+// ==========================================
 
 app.get("/", (req, res) => {
 
@@ -36,221 +35,238 @@ app.get("/", (req, res) => {
 });
 
 
-/* ==========================================
-   PRUEBA DE CONEXIÓN CON SUPABASE
-========================================== */
+// ==========================================
+// PRUEBA DE CONEXIÓN CON SUPABASE
+// ==========================================
 
 app.get("/prueba-supabase", async (req, res) => {
 
-    const { data, error } = await supabase
-        .from("alumnos")
-        .select("*");
+    try {
 
+        const { data, error } = await supabase
+            .from("alumnos")
+            .select("*");
 
-    if (error) {
+        if (error) {
 
-        return res.status(500).send(
-            "Error conectando con Supabase: " +
-            error.message
-        );
+            console.error(
+                "Error conectando con Supabase:",
+                error
+            );
+
+            return res.status(500).send(
+                "Error conectando con Supabase: " +
+                error.message
+            );
+
+        }
+
+        res.json({
+
+            mensaje: "Conexión con Supabase funcionando correctamente",
+
+            alumnos: data
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            error: "Error interno del servidor."
+
+        });
 
     }
-
-
-    res.json({
-
-        mensaje:
-            "Conexión con Supabase funcionando correctamente",
-
-        alumnos: data
-
-    });
 
 });
 
 
-/* ==========================================
-   API - CONSULTAR CUENTA POR DNI
-========================================== */
+// ==========================================
+// API - CONSULTAR CUENTA POR DNI
+// ==========================================
 
 app.get("/api/cuenta/:dni", async (req, res) => {
 
-    const dni = req.params.dni;
+    try {
+
+        const dni = req.params.dni;
 
 
-    /* --------------------------------------
-       VALIDAR DNI
-    -------------------------------------- */
+        // --------------------------------------
+        // VALIDAR DNI
+        // --------------------------------------
 
-    if (!/^\d{7,8}$/.test(dni)) {
+        if (!/^\d{7,8}$/.test(dni)) {
 
-        return res.status(400).json({
+            return res.status(400).json({
 
-            error:
-                "DNI inválido. Debe contener 7 u 8 números."
+                error: "DNI inválido. Debe contener 7 u 8 números."
 
-        });
+            });
 
-    }
-
-
-    /* --------------------------------------
-       BUSCAR ALUMNO
-    -------------------------------------- */
-
-    const {
-        data: alumno,
-        error: errorAlumno
-    } = await supabase
-
-        .from("alumnos")
-
-        .select("*")
-
-        .eq("dni", dni)
-
-        .maybeSingle();
+        }
 
 
-    /* --------------------------------------
-       ERROR AL BUSCAR ALUMNO
-    -------------------------------------- */
+        // --------------------------------------
+        // BUSCAR ALUMNO
+        // --------------------------------------
 
-    if (errorAlumno) {
-
-        console.error(
-            "Error buscando alumno:",
-            errorAlumno
-        );
-
-        return res.status(500).json({
-
-            error:
-                errorAlumno.message
-
-        });
-
-    }
+        const {
+            data: alumno,
+            error: errorAlumno
+        } = await supabase
+            .from("alumnos")
+            .select("*")
+            .eq("dni", dni)
+            .maybeSingle();
 
 
-    /* --------------------------------------
-       ALUMNO NO ENCONTRADO
-    -------------------------------------- */
+        // --------------------------------------
+        // ERROR AL BUSCAR ALUMNO
+        // --------------------------------------
 
-    if (!alumno) {
+        if (errorAlumno) {
 
-        return res.status(404).json({
+            console.error(
+                "Error buscando alumno:",
+                errorAlumno
+            );
 
-            error:
-                "Alumno no encontrado."
+            return res.status(500).json({
 
-        });
+                error: errorAlumno.message
 
-    }
+            });
+
+        }
 
 
-    /* --------------------------------------
-       BUSCAR CUOTAS DEL ALUMNO
-    -------------------------------------- */
+        // --------------------------------------
+        // ALUMNO NO ENCONTRADO
+        // --------------------------------------
 
-    const {
-        data: cuotas,
-        error: errorCuotas
-    } = await supabase
+        if (!alumno) {
 
-        .from("cuotas")
+            return res.status(404).json({
 
-        .select("*")
+                error: "Alumno no encontrado."
 
-        .eq(
-            "alumno_id",
-            alumno.id
-        )
+            });
 
-        .order(
-            "vencimiento",
-            {
+        }
+
+
+        // --------------------------------------
+        // BUSCAR CUOTAS
+        // --------------------------------------
+
+        const {
+            data: cuotas,
+            error: errorCuotas
+        } = await supabase
+            .from("cuotas")
+            .select("*")
+            .eq("alumno_id", alumno.id)
+            .order("vencimiento", {
                 ascending: true
-            }
-        );
+            });
 
 
-    /* --------------------------------------
-       ERROR AL BUSCAR CUOTAS
-    -------------------------------------- */
+        // --------------------------------------
+        // ERROR AL BUSCAR CUOTAS
+        // --------------------------------------
 
-    if (errorCuotas) {
+        if (errorCuotas) {
+
+            console.error(
+                "Error buscando cuotas:",
+                errorCuotas
+            );
+
+            return res.status(500).json({
+
+                error: "Error al consultar las cuotas."
+
+            });
+
+        }
+
+
+        // --------------------------------------
+        // CALCULAR SALDO PENDIENTE
+        // --------------------------------------
+
+        const saldo = cuotas
+            .filter(cuota => !cuota.pagado)
+            .reduce(
+                (total, cuota) => {
+
+                    return total +
+                        Number(
+                            cuota["cuota.importe"] || 0
+                        );
+
+                },
+                0
+            );
+
+
+        // --------------------------------------
+        // DEVOLVER INFORMACIÓN
+        // --------------------------------------
+
+        res.json({
+
+            alumno: alumno,
+
+            cuotas: cuotas,
+
+            saldo: saldo
+
+        });
+
+    } catch (error) {
 
         console.error(
-            "Error buscando cuotas:",
-            errorCuotas
+            "Error interno:",
+            error
         );
 
-        return res.status(500).json({
+        res.status(500).json({
 
-            error:
-                "Error al consultar las cuotas."
+            error: "Error interno del servidor."
 
         });
 
     }
-
-
-    /* --------------------------------------
-       CALCULAR SALDO PENDIENTE
-    -------------------------------------- */
-
-    const saldo = cuotas
-
-        .filter(
-            cuota =>
-                !cuota.pagado
-        )
-
-        .reduce(
-
-            (total, cuota) => {
-
-                return total +
-                    Number(
-                        cuota["cuota.importe"]
-                    );
-
-            },
-
-            0
-
-        );
-
-
-    /* --------------------------------------
-       DEVOLVER INFORMACIÓN
-    -------------------------------------- */
-
-    res.json({
-
-        alumno: alumno,
-
-        cuotas: cuotas,
-
-        saldo: saldo
-
-    });
 
 });
 
 
-/* ==========================================
-   INICIAR SERVIDOR
-========================================== */
+// ==========================================
+// SERVIDOR LOCAL
+// ==========================================
 
-app.listen(
-    PORT,
-    () => {
+if (require.main === module) {
+
+    const PORT = process.env.PORT || 3000;
+
+    app.listen(PORT, function () {
 
         console.log(
-            `Servidor iniciado en http://localhost:${PORT}`
+            "Servidor iniciado en http://localhost:" + PORT
         );
 
-    }
-);
+    });
+
+}
+
+
+// ==========================================
+// EXPORTAR A VERCEL
+// ==========================================
+
+module.exports = app;
