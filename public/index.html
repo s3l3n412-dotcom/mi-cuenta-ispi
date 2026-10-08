@@ -1,80 +1,69 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Mi Cuenta ISPI</title>
 
-    <!-- Fuentes -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Iconos -->
+    <!-- Font Awesome -->
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
 
-        /* =====================================================
+        /* =========================================================
            VARIABLES
-        ===================================================== */
+        ========================================================= */
 
         :root {
-            --verde: #168a52;
-            --verde-oscuro: #106b3f;
-            --verde-claro: #e8f7ef;
+            --verde: #198754;
+            --verde-oscuro: #146c43;
+            --verde-claro: #dff5e8;
 
-            --naranja: #f28c28;
-            --naranja-oscuro: #d96e0d;
-            --naranja-claro: #fff1df;
+            --celeste: #0d6efd;
+            --celeste-claro: #e4f0ff;
 
-            --celeste: #2d9cdb;
-            --celeste-claro: #e8f5fc;
+            --naranja: #fd7e14;
+            --naranja-claro: #fff0df;
 
             --blanco: #ffffff;
-            --fondo: #f4f7f6;
-            --fondo-card: #ffffff;
+            --gris-fondo: #f4f7f9;
+            --gris: #6c757d;
+            --gris-claro: #e9ecef;
+            --negro: #212529;
 
-            --texto: #202525;
-            --texto-suave: #687474;
-
-            --borde: #dce5e2;
-
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.08);
-
+            --sombra: 0 10px 30px rgba(0,0,0,0.08);
             --radio: 18px;
         }
 
         body[data-theme="oscuro"] {
-            --blanco: #161b1a;
-            --fondo: #101514;
-            --fondo-card: #1a2220;
+            --blanco: #1e252b;
+            --gris-fondo: #12171b;
+            --gris: #adb5bd;
+            --gris-claro: #343a40;
+            --negro: #f1f3f5;
 
-            --texto: #f0f5f3;
-            --texto-suave: #aebbb7;
+            --verde-claro: #183c2a;
+            --celeste-claro: #182f4b;
+            --naranja-claro: #4a2d18;
 
-            --borde: #303c38;
-
-            --verde-claro: #153b29;
-            --naranja-claro: #422d18;
-            --celeste-claro: #183546;
-
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --sombra: 0 10px 30px rgba(0,0,0,0.30);
         }
 
-        /* =====================================================
+        /* =========================================================
            GENERAL
-        ===================================================== */
+        ========================================================= */
 
         * {
             box-sizing: border-box;
@@ -82,18 +71,17 @@
             padding: 0;
         }
 
-        html {
-            scroll-behavior: smooth;
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
         }
 
         body {
-            font-family: "Inter", Arial, sans-serif;
-            background: var(--fondo);
-            color: var(--texto);
-            min-height: 100vh;
-            transition:
-                background 0.3s ease,
-                color 0.3s ease;
+            font-family: "Inter", sans-serif;
+            background: var(--gris-fondo);
+            color: var(--negro);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         button,
@@ -106,424 +94,346 @@
             cursor: pointer;
         }
 
-        .oculto {
-            display: none !important;
-        }
-
-        /* =====================================================
+        /* =========================================================
            HEADER
-        ===================================================== */
+        ========================================================= */
 
         header {
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 1000;
-
-            background: var(--fondo-card);
-            border-bottom: 1px solid var(--borde);
-
-            transition: 0.3s;
-        }
-
-        .header-contenedor {
-            width: min(1180px, 94%);
-            margin: auto;
-
-            min-height: 74px;
-
+            left: 0;
+            width: 100%;
+            height: 72px;
+            background: var(--blanco);
+            border-bottom: 1px solid var(--gris-claro);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            padding: 0 28px;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .logo-icono {
-            width: 46px;
-            height: 46px;
-
-            border-radius: 14px;
-
-            background: linear-gradient(
-                135deg,
-                var(--verde),
-                var(--celeste)
-            );
-
-            color: white;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 21px;
-        }
-
-        .logo-texto h1 {
-            font-size: 19px;
             font-weight: 800;
+            font-size: 20px;
+            color: var(--verde);
         }
 
-        .logo-texto p {
-            font-size: 11px;
-            color: var(--texto-suave);
-            margin-top: 2px;
-        }
-
-        .header-acciones {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-tema,
-        .btn-inicio {
-            border: 1px solid var(--borde);
-            background: var(--fondo-card);
-            color: var(--texto);
-
+        .logo-icon {
             width: 42px;
             height: 42px;
-
             border-radius: 12px;
-
+            background: var(--verde);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 19px;
+        }
 
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-button {
+            width: 42px;
+            height: 42px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gris-fondo);
+            color: var(--negro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: 0.2s;
         }
 
-        .btn-tema:hover,
-        .btn-inicio:hover {
+        .icon-button:hover {
             transform: translateY(-2px);
-            border-color: var(--verde);
-            color: var(--verde);
-        }
-
-        /* =====================================================
-           CONTENEDOR
-        ===================================================== */
-
-        .contenedor {
-            width: min(1100px, 92%);
-            margin: auto;
-        }
-
-        /* =====================================================
-           INICIO
-        ===================================================== */
-
-        .inicio {
-            min-height: calc(100vh - 74px);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding: 60px 0;
-        }
-
-        .inicio-contenido {
-            width: min(900px, 100%);
-            text-align: center;
-        }
-
-        .inicio-icono {
-            width: 90px;
-            height: 90px;
-
-            margin: 0 auto 22px;
-
-            border-radius: 28px;
-
-            background: linear-gradient(
-                135deg,
-                var(--verde),
-                var(--celeste)
-            );
-
-            color: white;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 40px;
-
-            box-shadow: var(--sombra);
-        }
-
-        .inicio h2 {
-            font-size: clamp(30px, 5vw, 48px);
-            font-weight: 800;
-
-            margin-bottom: 12px;
-        }
-
-        .inicio h2 span {
-            color: var(--verde);
-        }
-
-        .inicio-descripcion {
-            max-width: 650px;
-            margin: 0 auto 38px;
-
-            color: var(--texto-suave);
-            line-height: 1.7;
-            font-size: 16px;
-        }
-
-        .opciones-inicio {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 18px;
-        }
-
-        .opcion-inicio {
-            border: 1px solid var(--borde);
-
-            background: var(--fondo-card);
-            color: var(--texto);
-
-            border-radius: var(--radio);
-
-            padding: 28px 20px;
-
-            min-height: 170px;
-
-            box-shadow: var(--sombra);
-
-            transition:
-                transform 0.25s,
-                border-color 0.25s,
-                box-shadow 0.25s;
-        }
-
-        .opcion-inicio:hover {
-            transform: translateY(-5px);
-            border-color: var(--verde);
-        }
-
-        .opcion-inicio .icono {
-            width: 58px;
-            height: 58px;
-
-            margin: 0 auto 15px;
-
-            border-radius: 17px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 23px;
-        }
-
-        .opcion-inicio.ingresar .icono {
             background: var(--verde-claro);
             color: var(--verde);
         }
 
-        .opcion-inicio.registro .icono {
+        /* =========================================================
+           SISTEMA DE PANTALLAS
+        ========================================================= */
+
+        main {
+            min-height: 100vh;
+            padding-top: 72px;
+        }
+
+        .screen {
+            display: none;
+            min-height: calc(100vh - 72px);
+            padding: 45px 20px;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        /* =========================================================
+           INICIO
+        ========================================================= */
+
+        #inicio {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .welcome {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .welcome-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 25px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, var(--verde), var(--celeste));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: var(--sombra);
+        }
+
+        .welcome h1 {
+            font-size: clamp(30px, 5vw, 52px);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            color: var(--gris);
+            font-size: 17px;
+            margin-bottom: 42px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .option-card {
+            border: none;
+            background: var(--blanco);
+            color: var(--negro);
+            border-radius: 22px;
+            padding: 34px 25px;
+            min-height: 210px;
+            box-shadow: var(--sombra);
+            border: 1px solid var(--gris-claro);
+            transition: all 0.25s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--verde);
+            box-shadow: 0 15px 35px rgba(25,135,84,0.15);
+        }
+
+        .option-card .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+        }
+
+        .option-card.ingresar .card-icon {
+            background: var(--verde-claro);
+            color: var(--verde);
+        }
+
+        .option-card.recuperar .card-icon {
             background: var(--naranja-claro);
             color: var(--naranja);
         }
 
-        .opcion-inicio.recuperar .icono {
+        .option-card.registro .card-icon {
             background: var(--celeste-claro);
             color: var(--celeste);
         }
 
-        .opcion-inicio h3 {
-            font-size: 17px;
-            margin-bottom: 7px;
+        .option-card h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
         }
 
-        .opcion-inicio p {
-            color: var(--texto-suave);
-            font-size: 13px;
-            line-height: 1.5;
+        .option-card p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--gris);
         }
 
-        /* =====================================================
-           SECCIONES DE FORMULARIO
-        ===================================================== */
+        /* =========================================================
+           FORMULARIOS
+        ========================================================= */
 
-        .seccion-formulario {
-            padding: 90px 0;
-            min-height: 650px;
-            scroll-margin-top: 80px;
+        .form-page {
+            align-items: center;
+            justify-content: center;
         }
 
-        .formulario-card {
-            width: min(600px, 100%);
-            margin: auto;
-
-            background: var(--fondo-card);
-            border: 1px solid var(--borde);
-
-            border-radius: 24px;
-
-            padding: 38px;
-
+        .form-card {
+            width: 100%;
+            max-width: 650px;
+            background: var(--blanco);
+            border: 1px solid var(--gris-claro);
+            border-radius: var(--radio);
+            padding: 35px;
             box-shadow: var(--sombra);
         }
 
-        .formulario-titulo {
+        .form-card.large {
+            max-width: 850px;
+        }
+
+        .form-header {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .formulario-titulo .icono {
-            width: 64px;
-            height: 64px;
-
+        .form-header-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 18px;
             margin: 0 auto 15px;
-
-            border-radius: 19px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             font-size: 25px;
         }
 
-        .titulo-verde .icono {
+        .form-header-icon.green {
             background: var(--verde-claro);
             color: var(--verde);
         }
 
-        .titulo-naranja .icono {
-            background: var(--naranja-claro);
-            color: var(--naranja);
-        }
-
-        .titulo-celeste .icono {
+        .form-header-icon.blue {
             background: var(--celeste-claro);
             color: var(--celeste);
         }
 
-        .formulario-titulo h2 {
+        .form-header h2 {
             font-size: 27px;
             margin-bottom: 8px;
         }
 
-        .formulario-titulo p {
-            color: var(--texto-suave);
+        .form-header p {
+            color: var(--gris);
             font-size: 14px;
-            line-height: 1.5;
         }
 
-        /* =====================================================
-           CAMPOS
-        ===================================================== */
-
-        .campo {
-            margin-bottom: 17px;
-        }
-
-        .campo label {
-            display: block;
-
-            font-size: 13px;
-            font-weight: 600;
-
-            margin-bottom: 7px;
-        }
-
-        .campo input,
-        .campo select {
-            width: 100%;
-
-            padding: 13px 14px;
-
-            border: 1px solid var(--borde);
-            border-radius: 12px;
-
-            background: var(--fondo);
-            color: var(--texto);
-
-            outline: none;
-
-            transition: 0.2s;
-        }
-
-        .campo input:focus,
-        .campo select:focus {
-            border-color: var(--verde);
-
-            box-shadow:
-                0 0 0 3px
-                rgba(22, 138, 82, 0.12);
-        }
-
-        .fila {
+        .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
         }
 
-        .password-contenedor {
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
             position: relative;
         }
 
-        .password-contenedor input {
-            padding-right: 48px;
-        }
-
-        .btn-password {
+        .input-wrapper i {
             position: absolute;
-
-            right: 8px;
+            left: 14px;
             top: 50%;
-
             transform: translateY(-50%);
-
-            border: none;
-            background: transparent;
-
-            color: var(--texto-suave);
-
-            width: 35px;
-            height: 35px;
+            color: var(--gris);
+            pointer-events: none;
         }
 
-        .btn-password:hover {
-            color: var(--verde);
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            min-height: 48px;
+            border: 1px solid var(--gris-claro);
+            border-radius: 11px;
+            background: var(--gris-fondo);
+            color: var(--negro);
+            padding: 12px 14px;
+            outline: none;
+            transition: 0.2s;
         }
 
-        /* =====================================================
-           BOTONES
-        ===================================================== */
+        .input-wrapper input {
+            padding-left: 43px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--verde);
+            box-shadow: 0 0 0 3px rgba(25,135,84,0.10);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
 
         .btn {
+            min-height: 48px;
             border: none;
-
-            border-radius: 12px;
-
-            padding: 13px 18px;
-
-            font-size: 14px;
+            border-radius: 11px;
+            padding: 12px 20px;
             font-weight: 700;
-
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-
             transition: 0.2s;
         }
 
@@ -531,336 +441,362 @@
             transform: translateY(-2px);
         }
 
-        .btn-verde {
-            width: 100%;
-
+        .btn-primary {
             background: var(--verde);
             color: white;
-        }
-
-        .btn-verde:hover {
-            background: var(--verde-oscuro);
-        }
-
-        .btn-naranja {
-            width: 100%;
-
-            background: var(--naranja);
-            color: white;
-        }
-
-        .btn-naranja:hover {
-            background: var(--naranja-oscuro);
-        }
-
-        .btn-celeste {
-            width: 100%;
-
-            background: var(--celeste);
-            color: white;
-        }
-
-        .btn-secundario {
-            background: transparent;
-            color: var(--texto);
-
-            border: 1px solid var(--borde);
-        }
-
-        .btn-secundario:hover {
-            border-color: var(--verde);
-            color: var(--verde);
-        }
-
-        .botones-secundarios {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .botones-secundarios .btn {
             flex: 1;
         }
 
-        /* =====================================================
-           MENSAJES
-        ===================================================== */
-
-        .mensaje {
-            padding: 13px 15px;
-
-            border-radius: 12px;
-
-            font-size: 13px;
-            line-height: 1.5;
-
-            margin-bottom: 18px;
-
-            display: none;
+        .btn-primary:hover {
+            background: var(--verde-oscuro);
         }
 
-        .mensaje.visible {
+        .btn-secondary {
+            background: var(--gris-claro);
+            color: var(--negro);
+        }
+
+        .btn-blue {
+            background: var(--celeste);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-orange {
+            background: var(--naranja);
+            color: white;
+            flex: 1;
+        }
+
+        .message {
+            display: none;
+            padding: 13px 15px;
+            border-radius: 10px;
+            margin-top: 18px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.show {
             display: block;
         }
 
-        .mensaje.exito {
+        .message.success {
             background: var(--verde-claro);
-            color: var(--verde);
-            border: 1px solid rgba(22, 138, 82, 0.2);
+            color: var(--verde-oscuro);
         }
 
-        .mensaje.error {
-            background: #ffeaea;
-            color: #c0392b;
-            border: 1px solid #f1baba;
+        .message.error {
+            background: #fce8e8;
+            color: #b02a37;
         }
 
-        body[data-theme="oscuro"] .mensaje.error {
-            background: #3d1e1e;
-            color: #ffaaa2;
-            border-color: #643333;
+        body[data-theme="oscuro"] .message.error {
+            background: #442326;
+            color: #ffb3ba;
         }
 
-        .mensaje.info {
-            background: var(--celeste-claro);
-            color: var(--celeste);
-            border: 1px solid rgba(45, 156, 219, 0.2);
-        }
+        /* =========================================================
+           BOTON VOLVER
+        ========================================================= */
 
-        /* =====================================================
-           ENLACES
-        ===================================================== */
-
-        .enlace {
-            color: var(--verde);
+        .back-button {
+            border: none;
+            background: transparent;
+            color: var(--gris);
             font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
+            margin-bottom: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
         }
 
-        .enlace:hover {
-            text-decoration: underline;
+        .back-button:hover {
+            color: var(--verde);
         }
 
-        .texto-centro {
+        /* =========================================================
+           MODAL RECUPERAR
+        ========================================================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.58);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: modalFade 0.25s ease;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 500px;
+            background: var(--blanco);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+            position: relative;
+            animation: modalUp 0.25s ease;
+        }
+
+        @keyframes modalUp {
+            from {
+                transform: translateY(20px) scale(0.98);
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 10px;
+            background: var(--gris-fondo);
+            color: var(--negro);
+        }
+
+        .modal-close:hover {
+            background: var(--gris-claro);
+        }
+
+        .modal-header {
             text-align: center;
+            margin-bottom: 25px;
         }
 
-        .ayuda {
-            color: var(--texto-suave);
-            font-size: 12px;
+        .modal-header-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 18px;
+            background: var(--naranja-claro);
+            color: var(--naranja);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        .modal-header h2 {
+            margin-bottom: 8px;
+        }
+
+        .modal-header p {
+            color: var(--gris);
+            font-size: 14px;
             line-height: 1.5;
-            margin-top: 15px;
         }
 
-        /* =====================================================
-           CUENTA
-        ===================================================== */
+        /* =========================================================
+           CUENTA DEL ALUMNO
+        ========================================================= */
 
         #cuenta {
-            padding: 50px 0 80px;
+            align-items: flex-start;
         }
 
-        .cuenta-titulo {
-            margin-bottom: 30px;
+        .account-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
         }
 
-        .cuenta-titulo h2 {
+        .account-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .account-title h1 {
             font-size: 30px;
             margin-bottom: 6px;
         }
 
-        .cuenta-titulo p {
-            color: var(--texto-suave);
+        .account-title p {
+            color: var(--gris);
         }
 
-        .perfil-card {
-            background: var(--fondo-card);
-            border: 1px solid var(--borde);
+        .account-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-            border-radius: 20px;
+        .account-actions .btn {
+            flex: initial;
+        }
 
-            padding: 25px;
-
+        .student-card {
+            background: linear-gradient(135deg, var(--verde), var(--celeste));
+            color: white;
+            border-radius: 22px;
+            padding: 30px;
+            margin-bottom: 25px;
             box-shadow: var(--sombra);
-
-            margin-bottom: 20px;
         }
 
-        .perfil-superior {
+        .student-card-content {
             display: flex;
             align-items: center;
-            gap: 17px;
-
-            margin-bottom: 22px;
+            gap: 20px;
         }
 
-        .perfil-avatar {
-            width: 70px;
-            height: 70px;
-
-            flex-shrink: 0;
-
-            border-radius: 22px;
-
-            background: linear-gradient(
-                135deg,
-                var(--verde),
-                var(--celeste)
-            );
-
-            color: white;
-
+        .student-avatar {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 30px;
+            flex-shrink: 0;
         }
 
-        .perfil-superior h3 {
-            font-size: 21px;
+        .student-card h2 {
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .student-card p {
+            opacity: 0.9;
             margin-bottom: 4px;
         }
 
-        .perfil-superior p {
-            color: var(--texto-suave);
-            font-size: 13px;
-        }
-
-        .datos-perfil {
+        .dashboard-grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
         }
 
-        .dato {
-            padding: 14px;
-
-            border-radius: 13px;
-
-            background: var(--fondo);
-
-            border: 1px solid var(--borde);
-        }
-
-        .dato small {
-            display: block;
-
-            color: var(--texto-suave);
-
-            font-size: 11px;
-
-            margin-bottom: 5px;
-        }
-
-        .dato strong {
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-        /* =====================================================
-           RESUMEN
-        ===================================================== */
-
-        .resumen-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 16px;
-
-            margin-bottom: 20px;
-        }
-
-        .resumen-card {
-            background: var(--fondo-card);
-
-            border: 1px solid var(--borde);
-
+        .dashboard-card {
+            background: var(--blanco);
+            border: 1px solid var(--gris-claro);
             border-radius: 18px;
-
-            padding: 21px;
-
+            padding: 23px;
             box-shadow: var(--sombra);
         }
 
-        .resumen-card .icono {
-            width: 45px;
-            height: 45px;
-
-            border-radius: 13px;
-
+        .dashboard-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            margin-bottom: 14px;
+            margin-bottom: 15px;
         }
 
-        .resumen-card.verde .icono {
+        .dashboard-card.green .dashboard-card-icon {
             background: var(--verde-claro);
             color: var(--verde);
         }
 
-        .resumen-card.naranja .icono {
+        .dashboard-card.orange .dashboard-card-icon {
             background: var(--naranja-claro);
             color: var(--naranja);
         }
 
-        .resumen-card.celeste .icono {
+        .dashboard-card.blue .dashboard-card-icon {
             background: var(--celeste-claro);
             color: var(--celeste);
         }
 
-        .resumen-card small {
-            display: block;
-            color: var(--texto-suave);
-            margin-bottom: 5px;
+        .dashboard-card h3 {
+            font-size: 14px;
+            color: var(--gris);
+            margin-bottom: 8px;
         }
 
-        .resumen-card strong {
+        .dashboard-card .value {
             font-size: 25px;
+            font-weight: 800;
         }
 
-        /* =====================================================
-           TABLA CUOTAS
-        ===================================================== */
-
-        .tabla-card {
-            background: var(--fondo-card);
-
-            border: 1px solid var(--borde);
-
-            border-radius: 20px;
-
-            padding: 25px;
-
+        .section-card {
+            background: var(--blanco);
+            border: 1px solid var(--gris-claro);
+            border-radius: 18px;
             box-shadow: var(--sombra);
-
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            overflow: hidden;
         }
 
-        .tabla-titulo {
+        .section-card-header {
+            padding: 20px 23px;
+            border-bottom: 1px solid var(--gris-claro);
             display: flex;
             align-items: center;
             justify-content: space-between;
-
             gap: 15px;
-
-            margin-bottom: 20px;
         }
 
-        .tabla-titulo h3 {
+        .section-card-header h2 {
             font-size: 19px;
         }
 
-        .tabla-responsive {
+        .section-card-body {
+            padding: 23px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .profile-item {
+            padding: 15px;
+            background: var(--gris-fondo);
+            border-radius: 12px;
+        }
+
+        .profile-item span {
+            display: block;
+            color: var(--gris);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .profile-item strong {
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        /* =========================================================
+           TABLA CUOTAS
+        ========================================================= */
+
+        .table-wrapper {
             width: 100%;
             overflow-x: auto;
         }
@@ -868,284 +804,189 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            min-width: 650px;
         }
 
         th,
         td {
+            padding: 14px 12px;
             text-align: left;
-
-            padding: 13px 10px;
-
-            border-bottom: 1px solid var(--borde);
-
-            font-size: 13px;
+            border-bottom: 1px solid var(--gris-claro);
+            font-size: 14px;
         }
 
         th {
-            color: var(--texto-suave);
-            font-size: 11px;
+            color: var(--gris);
+            font-size: 12px;
             text-transform: uppercase;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .estado {
+        .status {
             display: inline-flex;
-
             align-items: center;
-
-            padding: 5px 9px;
-
-            border-radius: 20px;
-
-            font-size: 11px;
+            gap: 6px;
+            border-radius: 30px;
+            padding: 6px 10px;
+            font-size: 12px;
             font-weight: 700;
         }
 
-        .estado.pagado {
+        .status.paid {
             background: var(--verde-claro);
             color: var(--verde);
         }
 
-        .estado.pendiente {
+        .status.pending {
             background: var(--naranja-claro);
             color: var(--naranja);
         }
 
-        /* =====================================================
+        .empty-state {
+            text-align: center;
+            padding: 35px 15px;
+            color: var(--gris);
+        }
+
+        .empty-state i {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        /* =========================================================
            ANOTACIONES
-        ===================================================== */
+        ========================================================= */
 
-        .anotaciones-card {
-            background: var(--fondo-card);
-
-            border: 1px solid var(--borde);
-
-            border-radius: 20px;
-
-            padding: 25px;
-
-            box-shadow: var(--sombra);
-
-            margin-bottom: 20px;
+        .annotation {
+            padding: 16px;
+            border-left: 4px solid var(--celeste);
+            background: var(--celeste-claro);
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
 
-        .anotaciones-card h3 {
-            margin-bottom: 15px;
+        .annotation:last-child {
+            margin-bottom: 0;
         }
 
-        .anotacion {
-            padding: 14px;
-
-            background: var(--fondo);
-
-            border: 1px solid var(--borde);
-
-            border-radius: 12px;
-
-            margin-bottom: 10px;
-
-            line-height: 1.5;
-
-            font-size: 13px;
-        }
-
-        .sin-datos {
-            color: var(--texto-suave);
-            font-size: 13px;
-        }
-
-        /* =====================================================
-           ACCIONES CUENTA
-        ===================================================== */
-
-        .acciones-cuenta {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 12px;
-
-            margin-bottom: 20px;
-        }
-
-        .acciones-cuenta .btn {
-            width: 100%;
-        }
-
-        /* =====================================================
+        /* =========================================================
            FOOTER
-        ===================================================== */
+        ========================================================= */
 
         footer {
-            border-top: 1px solid var(--borde);
-
-            padding: 25px 0;
-
+            background: var(--blanco);
+            border-top: 1px solid var(--gris-claro);
             text-align: center;
-
-            color: var(--texto-suave);
-
-            font-size: 12px;
+            padding: 22px;
+            color: var(--gris);
+            font-size: 13px;
         }
 
-        /* =====================================================
-           BOTÓN VOLVER ARRIBA
-        ===================================================== */
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
 
-        .btn-arriba {
-            position: fixed;
+        @media (max-width: 850px) {
 
-            right: 20px;
-            bottom: 20px;
+            .options-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
 
-            width: 45px;
-            height: 45px;
+            .option-card {
+                min-height: 160px;
+                padding: 25px;
+            }
 
-            border: none;
+            .option-card .card-icon {
+                width: 55px;
+                height: 55px;
+                margin-bottom: 12px;
+            }
 
-            border-radius: 50%;
-
-            background: var(--verde);
-            color: white;
-
-            box-shadow: var(--sombra);
-
-            display: none;
-
-            align-items: center;
-            justify-content: center;
-
-            z-index: 900;
-        }
-
-        .btn-arriba.visible {
-            display: flex;
-        }
-
-        /* =====================================================
-           RESPONSIVE TABLET
-        ===================================================== */
-
-        @media (max-width: 800px) {
-
-            .opciones-inicio {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
 
-            .opcion-inicio {
-                min-height: auto;
+            .account-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            header {
+                height: 64px;
+                padding: 0 15px;
+            }
+
+            main {
+                padding-top: 64px;
+            }
+
+            .screen {
+                min-height: calc(100vh - 64px);
+                padding: 30px 14px;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .logo-icon {
+                width: 37px;
+                height: 37px;
+            }
+
+            .form-card,
+            .modal-card {
+                padding: 23px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-card {
                 padding: 22px;
             }
 
-            .resumen-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .datos-perfil {
-                grid-template-columns: 1fr;
-            }
-
-            .acciones-cuenta {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* =====================================================
-           RESPONSIVE CELULAR
-        ===================================================== */
-
-        @media (max-width: 600px) {
-
-            .header-contenedor {
-                min-height: 65px;
-            }
-
-            .logo-icono {
-                width: 40px;
-                height: 40px;
-                border-radius: 12px;
-            }
-
-            .logo-texto h1 {
-                font-size: 16px;
-            }
-
-            .logo-texto p {
-                font-size: 10px;
-            }
-
-            .btn-tema,
-            .btn-inicio {
-                width: 38px;
-                height: 38px;
-            }
-
-            .inicio {
-                padding: 45px 0;
-                min-height: auto;
-            }
-
-            .inicio-icono {
-                width: 75px;
-                height: 75px;
-                font-size: 31px;
-            }
-
-            .inicio h2 {
-                font-size: 31px;
-            }
-
-            .inicio-descripcion {
-                font-size: 14px;
-                margin-bottom: 28px;
-            }
-
-            .seccion-formulario {
-                padding: 55px 0;
-            }
-
-            .formulario-card {
-                padding: 23px 17px;
-                border-radius: 18px;
-            }
-
-            .formulario-titulo h2 {
-                font-size: 23px;
-            }
-
-            .fila {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .perfil-card,
-            .tabla-card,
-            .anotaciones-card {
-                padding: 18px;
-            }
-
-            .perfil-superior {
+            .student-card-content {
                 align-items: flex-start;
             }
 
-            .perfil-avatar {
-                width: 58px;
-                height: 58px;
-                border-radius: 17px;
-                font-size: 22px;
+            .student-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 23px;
             }
 
-            .perfil-superior h3 {
-                font-size: 18px;
+            .student-card h2 {
+                font-size: 21px;
             }
 
-            .botones-secundarios {
+            .form-actions {
                 flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+
+            .account-actions {
+                width: 100%;
+            }
+
+            .account-actions .btn {
+                width: 100%;
             }
         }
 
@@ -1154,252 +995,130 @@
 
 <body data-theme="claro">
 
-    <!-- =====================================================
+    <!-- =========================================================
          HEADER
-    ====================================================== -->
+    ========================================================= -->
 
     <header>
 
-        <div class="header-contenedor">
-
-            <div class="logo" onclick="irAlInicio()">
-
-                <div class="logo-icono">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-
-                <div class="logo-texto">
-                    <h1>Mi Cuenta ISPI</h1>
-                    <p>Instituto San Juan Bautista</p>
-                </div>
-
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
             </div>
 
-            <div class="header-acciones">
+            <span>Mi Cuenta ISPI</span>
+        </div>
 
-                <button
-                    class="btn-inicio"
-                    onclick="irAlInicio()"
-                    title="Inicio">
+        <div class="header-buttons">
 
-                    <i class="fa-solid fa-house"></i>
+            <button
+                class="icon-button"
+                id="btnInicioHeader"
+                title="Inicio"
+                onclick="mostrarPantalla('inicio')"
+            >
+                <i class="fa-solid fa-house"></i>
+            </button>
 
-                </button>
-
-                <button
-                    class="btn-tema"
-                    onclick="cambiarTema()"
-                    title="Cambiar tema">
-
-                    <i
-                        id="iconoTema"
-                        class="fa-solid fa-moon">
-                    </i>
-
-                </button>
-
-            </div>
+            <button
+                class="icon-button"
+                id="btnTema"
+                title="Cambiar tema"
+                onclick="cambiarTema()"
+            >
+                <i class="fa-solid fa-moon"></i>
+            </button>
 
         </div>
 
     </header>
 
-    <!-- =====================================================
-         INICIO
-    ====================================================== -->
 
-    <main id="inicio">
+    <!-- =========================================================
+         MAIN
+    ========================================================= -->
 
-        <section class="inicio">
+    <main>
 
-            <div class="contenedor inicio-contenido">
+        <!-- =====================================================
+             PANTALLA 1 - INICIO
+        ===================================================== -->
 
-                <div class="inicio-icono">
-                    <i class="fa-solid fa-user-graduate"></i>
+        <section id="inicio" class="screen active">
+
+            <div class="welcome">
+
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
                 </div>
 
-                <h2>
-                    Bienvenido a
-                    <span>Mi Cuenta ISPI</span>
-                </h2>
+                <h1>Bienvenidos a Mi Cuenta ISPI</h1>
 
-                <p class="inicio-descripcion">
-                    Accedé a tu información académica, consultá tus cuotas,
-                    revisá tu estado de cuenta y mantené tus datos actualizados
-                    desde un solo lugar.
+                <p>
+                    Accedé a tu información académica y administrativa
+                    de manera rápida y sencilla.
                 </p>
 
-                <div class="opciones-inicio">
+                <div class="options-grid">
 
                     <!-- INGRESAR -->
 
                     <button
-                        class="opcion-inicio ingresar"
-                        onclick="irASeccion('seccionLogin')">
+                        class="option-card ingresar"
+                        onclick="mostrarPantalla('login')"
+                    >
 
-                        <div class="icono">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                        </div>
-
-                        <h3>Ingresar</h3>
-
-                        <p>
-                            Ingresá a tu cuenta con tu DNI y contraseña.
-                        </p>
-
-                    </button>
-
-                    <!-- REGISTRARSE -->
-
-                    <button
-                        class="opcion-inicio registro"
-                        onclick="irASeccion('seccionRegistro')">
-
-                        <div class="icono">
-                            <i class="fa-solid fa-user-plus"></i>
-                        </div>
-
-                        <h3>Registrarme</h3>
-
-                        <p>
-                            Creá tu cuenta para acceder al sistema.
-                        </p>
-
-                    </button>
-
-                    <!-- RECUPERAR -->
-
-                    <button
-                        class="opcion-inicio recuperar"
-                        onclick="irASeccion('seccionRecuperar')">
-
-                        <div class="icono">
-                            <i class="fa-solid fa-key"></i>
-                        </div>
-
-                        <h3>Recuperar cuenta</h3>
-
-                        <p>
-                            ¿Olvidaste tu contraseña? Ingresá aquí.
-                        </p>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- =================================================
-             LOGIN
-        ================================================== -->
-
-        <section
-            id="seccionLogin"
-            class="seccion-formulario">
-
-            <div class="contenedor">
-
-                <div class="formulario-card">
-
-                    <div class="formulario-titulo titulo-verde">
-
-                        <div class="icono">
+                        <div class="card-icon">
                             <i class="fa-solid fa-right-to-bracket"></i>
                         </div>
 
                         <h2>Ingresar</h2>
 
                         <p>
-                            Ingresá con tu DNI y contraseña.
+                            Accedé a tu cuenta de alumno.
                         </p>
 
-                    </div>
+                    </button>
 
-                    <div
-                        id="mensajeLogin"
-                        class="mensaje">
-                    </div>
 
-                    <form id="formLogin">
+                    <!-- RECUPERAR -->
 
-                        <div class="campo">
+                    <button
+                        class="option-card recuperar"
+                        onclick="abrirRecuperacion()"
+                    >
 
-                            <label for="loginDni">
-                                DNI
-                            </label>
-
-                            <input
-                                type="text"
-                                id="loginDni"
-                                placeholder="Ej.: 40123456"
-                                inputmode="numeric"
-                                maxlength="8"
-                                required>
-
-                        </div>
-
-                        <div class="campo">
-
-                            <label for="loginContraseña">
-                                Contraseña
-                            </label>
-
-                            <div class="password-contenedor">
-
-                                <input
-                                    type="password"
-                                    id="loginContraseña"
-                                    placeholder="Ingresá tu contraseña"
-                                    required>
-
-                                <button
-                                    type="button"
-                                    class="btn-password"
-                                    onclick="mostrarContraseña('loginContraseña', this)">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="btn btn-verde">
-
-                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-
-                            Ingresar
-
-                        </button>
-
-                    </form>
-
-                    <div class="botones-secundarios">
-
-                        <button
-                            class="btn btn-secundario"
-                            onclick="irASeccion('seccionRegistro')">
-
-                            <i class="fa-solid fa-user-plus"></i>
-                            Registrarme
-
-                        </button>
-
-                        <button
-                            class="btn btn-secundario"
-                            onclick="irASeccion('seccionRecuperar')">
-
+                        <div class="card-icon">
                             <i class="fa-solid fa-key"></i>
-                            Recuperar
+                        </div>
 
-                        </button>
+                        <h2>Recuperar cuenta</h2>
 
-                    </div>
+                        <p>
+                            Recuperá el acceso a tu cuenta.
+                        </p>
+
+                    </button>
+
+
+                    <!-- REGISTRARSE -->
+
+                    <button
+                        class="option-card registro"
+                        onclick="mostrarPantalla('registro')"
+                    >
+
+                        <div class="card-icon">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+
+                        <h2>Registrarme</h2>
+
+                        <p>
+                            Creá una nueva cuenta de alumno.
+                        </p>
+
+                    </button>
 
                 </div>
 
@@ -1407,122 +1126,279 @@
 
         </section>
 
-        <!-- =================================================
-             REGISTRO
-        ================================================== -->
 
-        <section
-            id="seccionRegistro"
-            class="seccion-formulario">
+        <!-- =====================================================
+             PANTALLA 2 - INGRESAR
+        ===================================================== -->
 
-            <div class="contenedor">
+        <section id="login" class="screen form-page">
 
-                <div class="formulario-card">
+            <div class="screen-container">
 
-                    <div class="formulario-titulo titulo-naranja">
+                <button
+                    class="back-button"
+                    onclick="mostrarPantalla('inicio')"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Volver al inicio
+                </button>
 
-                        <div class="icono">
+
+                <div class="form-card">
+
+                    <div class="form-header">
+
+                        <div class="form-header-icon green">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </div>
+
+                        <h2>Ingresar</h2>
+
+                        <p>
+                            Completá tus datos para acceder a tu cuenta.
+                        </p>
+
+                    </div>
+
+
+                    <form id="loginForm">
+
+                        <div class="form-group">
+
+                            <label for="loginDni">
+                                DNI
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-id-card"></i>
+
+                                <input
+                                    type="text"
+                                    id="loginDni"
+                                    placeholder="Ingresá tu DNI"
+                                    inputmode="numeric"
+                                    maxlength="8"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group" style="margin-top:18px;">
+
+                            <label for="loginPassword">
+                                Contraseña
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="loginPassword"
+                                    placeholder="Ingresá tu contraseña"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                Ingresar
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="loginMessage"
+                            class="message"
+                        ></div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PANTALLA 3 - REGISTRO
+        ===================================================== -->
+
+        <section id="registro" class="screen form-page">
+
+            <div class="screen-container">
+
+                <button
+                    class="back-button"
+                    onclick="mostrarPantalla('inicio')"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Volver al inicio
+                </button>
+
+
+                <div class="form-card large">
+
+                    <div class="form-header">
+
+                        <div class="form-header-icon blue">
                             <i class="fa-solid fa-user-plus"></i>
                         </div>
 
                         <h2>Crear cuenta</h2>
 
                         <p>
-                            Completá tus datos para registrarte.
+                            Completá todos los datos para registrarte.
                         </p>
 
                     </div>
 
-                    <div
-                        id="mensajeRegistro"
-                        class="mensaje">
-                    </div>
 
-                    <form id="formRegistro">
+                    <form id="registroForm">
 
-                        <div class="fila">
+                        <div class="form-grid">
 
-                            <div class="campo">
+                            <!-- DNI -->
+
+                            <div class="form-group">
 
                                 <label for="registroDni">
                                     DNI
                                 </label>
 
-                                <input
-                                    type="text"
-                                    id="registroDni"
-                                    placeholder="DNI"
-                                    inputmode="numeric"
-                                    maxlength="8"
-                                    required>
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-id-card"></i>
+
+                                    <input
+                                        type="text"
+                                        id="registroDni"
+                                        placeholder="DNI"
+                                        inputmode="numeric"
+                                        maxlength="8"
+                                        required
+                                    >
+
+                                </div>
 
                             </div>
 
-                            <div class="campo">
 
-                                <label for="registroTelefono">
-                                    Teléfono
-                                </label>
+                            <!-- NOMBRE -->
 
-                                <input
-                                    type="tel"
-                                    id="registroTelefono"
-                                    placeholder="Teléfono"
-                                    required>
-
-                            </div>
-
-                        </div>
-
-                        <div class="fila">
-
-                            <div class="campo">
+                            <div class="form-group">
 
                                 <label for="registroNombre">
                                     Nombre
                                 </label>
 
-                                <input
-                                    type="text"
-                                    id="registroNombre"
-                                    placeholder="Nombre"
-                                    required>
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                    <input
+                                        type="text"
+                                        id="registroNombre"
+                                        placeholder="Nombre"
+                                        required
+                                    >
+
+                                </div>
 
                             </div>
 
-                            <div class="campo">
+
+                            <!-- APELLIDO -->
+
+                            <div class="form-group">
 
                                 <label for="registroApellido">
                                     Apellido
                                 </label>
 
-                                <input
-                                    type="text"
-                                    id="registroApellido"
-                                    placeholder="Apellido"
-                                    required>
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                    <input
+                                        type="text"
+                                        id="registroApellido"
+                                        placeholder="Apellido"
+                                        required
+                                    >
+
+                                </div>
 
                             </div>
 
-                        </div>
 
-                        <div class="campo">
+                            <!-- TELEFONO -->
 
-                            <label for="registroEmail">
-                                Correo electrónico
-                            </label>
+                            <div class="form-group">
 
-                            <input
-                                type="email"
-                                id="registroEmail"
-                                placeholder="ejemplo@gmail.com"
-                                required>
+                                <label for="registroTelefono">
+                                    Teléfono
+                                </label>
 
-                        </div>
+                                <div class="input-wrapper">
 
-                        <div class="fila">
+                                    <i class="fa-solid fa-phone"></i>
 
-                            <div class="campo">
+                                    <input
+                                        type="tel"
+                                        id="registroTelefono"
+                                        placeholder="Teléfono"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="form-group full">
+
+                                <label for="registroEmail">
+                                    Email
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-envelope"></i>
+
+                                    <input
+                                        type="email"
+                                        id="registroEmail"
+                                        placeholder="correo@ejemplo.com"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CARRERA -->
+
+                            <div class="form-group">
 
                                 <label for="registroCarrera">
                                     Carrera
@@ -1530,7 +1406,8 @@
 
                                 <select
                                     id="registroCarrera"
-                                    required>
+                                    required
+                                >
 
                                     <option value="">
                                         Seleccioná una carrera
@@ -1552,127 +1429,110 @@
 
                             </div>
 
-                            <div class="campo">
+
+                            <!-- CURSO -->
+
+                            <div class="form-group">
 
                                 <label for="registroCurso">
-                                    Curso / Año
+                                    Curso
                                 </label>
 
-                                <select
-                                    id="registroCurso"
-                                    required>
+                                <div class="input-wrapper">
 
-                                    <option value="">
-                                        Seleccioná
-                                    </option>
+                                    <i class="fa-solid fa-book"></i>
 
-                                    <option value="1">
-                                        1° año
-                                    </option>
+                                    <input
+                                        type="text"
+                                        id="registroCurso"
+                                        placeholder="Ej.: 1° año"
+                                        required
+                                    >
 
-                                    <option value="2">
-                                        2° año
-                                    </option>
+                                </div>
 
-                                    <option value="3">
-                                        3° año
-                                    </option>
+                            </div>
 
-                                </select>
+
+                            <!-- CONTRASEÑA -->
+
+                            <div class="form-group">
+
+                                <label for="registroPassword">
+                                    Contraseña
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-lock"></i>
+
+                                    <input
+                                        type="password"
+                                        id="registroPassword"
+                                        placeholder="Contraseña"
+                                        minlength="6"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CONFIRMAR CONTRASEÑA -->
+
+                            <div class="form-group">
+
+                                <label for="registroPasswordConfirm">
+                                    Confirmar contraseña
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-lock"></i>
+
+                                    <input
+                                        type="password"
+                                        id="registroPasswordConfirm"
+                                        placeholder="Repetí la contraseña"
+                                        minlength="6"
+                                        required
+                                    >
+
+                                </div>
 
                             </div>
 
                         </div>
 
-                        <div class="campo">
 
-                            <label for="registroContraseña">
-                                Contraseña
-                            </label>
+                        <div class="form-actions">
 
-                            <div class="password-contenedor">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="mostrarPantalla('inicio')"
+                            >
+                                Cancelar
+                            </button>
 
-                                <input
-                                    type="password"
-                                    id="registroContraseña"
-                                    placeholder="Mínimo 6 caracteres"
-                                    minlength="6"
-                                    required>
-
-                                <button
-                                    type="button"
-                                    class="btn-password"
-                                    onclick="mostrarContraseña('registroContraseña', this)">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-                            </div>
+                            <button
+                                type="submit"
+                                class="btn btn-blue"
+                            >
+                                <i class="fa-solid fa-user-plus"></i>
+                                Crear cuenta
+                            </button>
 
                         </div>
 
-                        <div class="campo">
 
-                            <label for="registroConfirmar">
-                                Repetir contraseña
-                            </label>
-
-                            <div class="password-contenedor">
-
-                                <input
-                                    type="password"
-                                    id="registroConfirmar"
-                                    placeholder="Repetí tu contraseña"
-                                    minlength="6"
-                                    required>
-
-                                <button
-                                    type="button"
-                                    class="btn-password"
-                                    onclick="mostrarContraseña('registroConfirmar', this)">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="btn btn-naranja">
-
-                            <i class="fa-solid fa-user-plus"></i>
-
-                            Crear mi cuenta
-
-                        </button>
+                        <div
+                            id="registroMessage"
+                            class="message"
+                        ></div>
 
                     </form>
-
-                    <div class="botones-secundarios">
-
-                        <button
-                            class="btn btn-secundario"
-                            onclick="irASeccion('seccionLogin')">
-
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                            Ya tengo cuenta
-
-                        </button>
-
-                        <button
-                            class="btn btn-secundario"
-                            onclick="irAlInicio()">
-
-                            <i class="fa-solid fa-house"></i>
-                            Inicio
-
-                        </button>
-
-                    </div>
 
                 </div>
 
@@ -1680,354 +1540,309 @@
 
         </section>
 
-        <!-- =================================================
-             RECUPERAR
-        ================================================== -->
 
-        <section
-            id="seccionRecuperar"
-            class="seccion-formulario">
+        <!-- =====================================================
+             PANTALLA 4 - CUENTA DEL ALUMNO
+        ===================================================== -->
 
-            <div class="contenedor">
+        <section id="cuenta" class="screen">
 
-                <div class="formulario-card">
+            <div class="account-container">
 
-                    <div class="formulario-titulo titulo-celeste">
+                <div class="account-top">
 
-                        <div class="icono">
-                            <i class="fa-solid fa-key"></i>
-                        </div>
+                    <div class="account-title">
 
-                        <h2>Recuperar cuenta</h2>
+                        <h1>Mi cuenta</h1>
 
                         <p>
-                            Ingresá tu DNI y correo electrónico
-                            para solicitar ayuda con tu cuenta.
+                            Información del alumno
                         </p>
 
                     </div>
 
-                    <div
-                        id="mensajeRecuperar"
-                        class="mensaje">
-                    </div>
 
-                    <form id="formRecuperar">
-
-                        <div class="campo">
-
-                            <label for="recuperarDni">
-                                DNI
-                            </label>
-
-                            <input
-                                type="text"
-                                id="recuperarDni"
-                                placeholder="Ingresá tu DNI"
-                                inputmode="numeric"
-                                maxlength="8"
-                                required>
-
-                        </div>
-
-                        <div class="campo">
-
-                            <label for="recuperarEmail">
-                                Correo electrónico
-                            </label>
-
-                            <input
-                                type="email"
-                                id="recuperarEmail"
-                                placeholder="ejemplo@gmail.com"
-                                required>
-
-                        </div>
+                    <div class="account-actions">
 
                         <button
-                            type="submit"
-                            class="btn btn-celeste">
-
-                            <i class="fa-solid fa-paper-plane"></i>
-
-                            Solicitar recuperación
-
-                        </button>
-
-                    </form>
-
-                    <p class="ayuda">
-                        Por el momento esta opción muestra la solicitud
-                        de recuperación. Para enviar automáticamente un
-                        correo con un código o enlace será necesario
-                        configurar un servicio de correo o Supabase Auth.
-                    </p>
-
-                    <div class="botones-secundarios">
-
-                        <button
-                            class="btn btn-secundario"
-                            onclick="irASeccion('seccionLogin')">
-
-                            <i class="fa-solid fa-arrow-left"></i>
-                            Volver a ingresar
-
+                            class="btn btn-secondary"
+                            onclick="descargarPDF()"
+                        >
+                            <i class="fa-solid fa-file-pdf"></i>
+                            Descargar PDF
                         </button>
 
                         <button
-                            class="btn btn-secundario"
-                            onclick="irAlInicio()">
-
-                            <i class="fa-solid fa-house"></i>
-                            Inicio
-
+                            class="btn btn-primary"
+                            onclick="cerrarSesion()"
+                        >
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Cerrar sesión
                         </button>
 
                     </div>
 
                 </div>
 
-            </div>
 
-        </section>
+                <!-- TARJETA DEL ALUMNO -->
 
-        <!-- =================================================
-             CUENTA
-        ================================================== -->
+                <div class="student-card">
 
-        <section
-            id="cuenta"
-            class="oculto">
+                    <div class="student-card-content">
 
-            <div class="contenedor">
-
-                <div class="cuenta-titulo">
-
-                    <h2>
-                        Mi cuenta
-                    </h2>
-
-                    <p>
-                        Información académica y estado de cuenta.
-                    </p>
-
-                </div>
-
-                <!-- PERFIL -->
-
-                <div class="perfil-card">
-
-                    <div class="perfil-superior">
-
-                        <div
-                            id="perfilAvatar"
-                            class="perfil-avatar">
-
-                            --
-
+                        <div class="student-avatar">
+                            <i class="fa-solid fa-user"></i>
                         </div>
 
                         <div>
 
-                            <h3 id="perfilNombre">
+                            <h2 id="cuentaNombre">
                                 Alumno
-                            </h3>
+                            </h2>
 
-                            <p id="perfilCarrera">
-                                Carrera
+                            <p>
+                                DNI:
+                                <strong id="cuentaDni">
+                                    -
+                                </strong>
+                            </p>
+
+                            <p id="cuentaCarrera">
+                                -
                             </p>
 
                         </div>
 
                     </div>
 
-                    <div class="datos-perfil">
-
-                        <div class="dato">
-
-                            <small>DNI</small>
-
-                            <strong id="datoDni">
-                                -
-                            </strong>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <small>Teléfono</small>
-
-                            <strong id="datoTelefono">
-                                -
-                            </strong>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <small>Correo electrónico</small>
-
-                            <strong id="datoEmail">
-                                -
-                            </strong>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <small>Curso</small>
-
-                            <strong id="datoCurso">
-                                -
-                            </strong>
-
-                        </div>
-
-                    </div>
-
                 </div>
+
 
                 <!-- RESUMEN -->
 
-                <div class="resumen-grid">
+                <div class="dashboard-grid">
 
-                    <div class="resumen-card naranja">
+                    <div class="dashboard-card green">
 
-                        <div class="icono">
-                            <i class="fa-solid fa-dollar-sign"></i>
-                        </div>
-
-                        <small>Saldo pendiente</small>
-
-                        <strong id="saldoCuenta">
-                            $0
-                        </strong>
-
-                    </div>
-
-                    <div class="resumen-card celeste">
-
-                        <div class="icono">
-                            <i class="fa-solid fa-file-invoice"></i>
-                        </div>
-
-                        <small>Total de cuotas</small>
-
-                        <strong id="totalCuotas">
-                            0
-                        </strong>
-
-                    </div>
-
-                    <div class="resumen-card verde">
-
-                        <div class="icono">
+                        <div class="dashboard-card-icon">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
 
-                        <small>Cuotas pagadas</small>
+                        <h3>Estado de cuenta</h3>
 
-                        <strong id="cuotasPagadas">
-                            0
-                        </strong>
+                        <div class="value">
+                            <span id="estadoCuenta">
+                                -
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-card orange">
+
+                        <div class="dashboard-card-icon">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+
+                        <h3>Saldo pendiente</h3>
+
+                        <div class="value">
+                            $<span id="saldoCuenta">
+                                0
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-card blue">
+
+                        <div class="dashboard-card-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+
+                        <h3>Total de cuotas</h3>
+
+                        <div class="value">
+                            <span id="totalCuotas">
+                                0
+                            </span>
+                        </div>
 
                     </div>
 
                 </div>
+
+
+                <!-- DATOS PERSONALES -->
+
+                <div class="section-card">
+
+                    <div class="section-card-header">
+
+                        <h2>
+                            <i class="fa-solid fa-user"></i>
+                            Datos personales
+                        </h2>
+
+                    </div>
+
+                    <div class="section-card-body">
+
+                        <div class="profile-grid">
+
+                            <div class="profile-item">
+
+                                <span>DNI</span>
+
+                                <strong id="perfilDni">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Nombre</span>
+
+                                <strong id="perfilNombre">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Apellido</span>
+
+                                <strong id="perfilApellido">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Teléfono</span>
+
+                                <strong id="perfilTelefono">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Email</span>
+
+                                <strong id="perfilEmail">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Carrera</span>
+
+                                <strong id="perfilCarrera">
+                                    -
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-item">
+
+                                <span>Curso</span>
+
+                                <strong id="perfilCurso">
+                                    -
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
 
                 <!-- CUOTAS -->
 
-                <div class="tabla-card">
+                <div class="section-card">
 
-                    <div class="tabla-titulo">
+                    <div class="section-card-header">
 
-                        <h3>
-                            <i class="fa-solid fa-receipt"></i>
-                            Mis cuotas
-                        </h3>
+                        <h2>
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            Cuotas
+                        </h2>
 
                     </div>
 
-                    <div class="tabla-responsive">
+                    <div class="section-card-body">
 
-                        <table>
+                        <div
+                            id="cuotasContainer"
+                            class="table-wrapper"
+                        >
 
-                            <thead>
+                            <div class="empty-state">
 
-                                <tr>
+                                <i class="fa-solid fa-spinner fa-spin"></i>
 
-                                    <th>
-                                        Concepto
-                                    </th>
+                                <p>
+                                    Cargando cuotas...
+                                </p>
 
-                                    <th>
-                                        Vencimiento
-                                    </th>
+                            </div>
 
-                                    <th>
-                                        Importe
-                                    </th>
-
-                                    <th>
-                                        Estado
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody id="tablaCuotas">
-
-                            </tbody>
-
-                        </table>
+                        </div>
 
                     </div>
 
                 </div>
+
 
                 <!-- ANOTACIONES -->
 
-                <div class="anotaciones-card">
+                <div class="section-card">
 
-                    <h3>
-                        <i class="fa-solid fa-note-sticky"></i>
-                        Anotaciones
-                    </h3>
+                    <div class="section-card-header">
 
-                    <div id="listaAnotaciones">
-
-                        <p class="sin-datos">
-                            No hay anotaciones registradas.
-                        </p>
+                        <h2>
+                            <i class="fa-solid fa-note-sticky"></i>
+                            Anotaciones
+                        </h2>
 
                     </div>
 
-                </div>
+                    <div class="section-card-body">
 
-                <!-- ACCIONES -->
+                        <div id="anotacionesContainer">
 
-                <div class="acciones-cuenta">
+                            <div class="empty-state">
 
-                    <button
-                        class="btn btn-celeste"
-                        onclick="descargarResumenPDF()">
+                                <i class="fa-solid fa-note-sticky"></i>
 
-                        <i class="fa-solid fa-file-pdf"></i>
+                                <p>
+                                    No hay anotaciones disponibles.
+                                </p>
 
-                        Descargar resumen
+                            </div>
 
-                    </button>
+                        </div>
 
-                    <button
-                        class="btn btn-secundario"
-                        onclick="cerrarSesion()">
-
-                        <i class="fa-solid fa-right-from-bracket"></i>
-
-                        Cerrar sesión
-
-                    </button>
+                    </div>
 
                 </div>
 
@@ -2037,122 +1852,198 @@
 
     </main>
 
-    <!-- =====================================================
-         BOTÓN ARRIBA
-    ====================================================== -->
 
-    <button
-        id="btnArriba"
-        class="btn-arriba"
-        onclick="irAlInicio()"
-        title="Volver arriba">
+    <!-- =========================================================
+         MODAL RECUPERAR CUENTA
+    ========================================================= -->
 
-        <i class="fa-solid fa-arrow-up"></i>
+    <div
+        id="modalRecuperar"
+        class="modal"
+    >
 
-    </button>
+        <div class="modal-card">
 
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
+            <button
+                class="modal-close"
+                onclick="cerrarRecuperacion()"
+                title="Cerrar"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-    <footer>
 
-        <div class="contenedor">
+            <div class="modal-header">
 
-            Mi Cuenta ISPI · Instituto San Juan Bautista
+                <div class="modal-header-icon">
+
+                    <i class="fa-solid fa-key"></i>
+
+                </div>
+
+                <h2>Recuperar cuenta</h2>
+
+                <p>
+                    Completá los datos para solicitar la recuperación
+                    de tu cuenta.
+                </p>
+
+            </div>
+
+
+            <form id="recuperarForm">
+
+                <div class="form-group">
+
+                    <label for="recuperarDni">
+                        DNI
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-id-card"></i>
+
+                        <input
+                            type="text"
+                            id="recuperarDni"
+                            placeholder="Ingresá tu DNI"
+                            inputmode="numeric"
+                            maxlength="8"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="margin-top:18px;"
+                >
+
+                    <label for="recuperarEmail">
+                        Email
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="recuperarEmail"
+                            placeholder="correo@ejemplo.com"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="margin-top:18px;"
+                >
+
+                    <label for="recuperarTelefono">
+                        Teléfono
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        <input
+                            type="tel"
+                            id="recuperarTelefono"
+                            placeholder="Teléfono"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="cerrarRecuperacion()"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-orange"
+                    >
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Recuperar
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="recuperarMessage"
+                    class="message"
+                ></div>
+
+            </form>
 
         </div>
 
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+
+    <footer>
+
+        <p>
+            ISPI 4019 - Mi Cuenta ISPI
+        </p>
+
     </footer>
 
-    <!-- =====================================================
+
+    <!-- =========================================================
          JAVASCRIPT
-    ====================================================== -->
+    ========================================================= -->
 
     <script>
 
-        // ====================================================
-        // TEMA CLARO / OSCURO
-        // ====================================================
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
 
-        function cargarTema() {
+        let alumnoActual = null;
+        let cuotasActuales = [];
 
-            const temaGuardado =
-                localStorage.getItem("tema") || "claro";
 
-            document.body.setAttribute(
-                "data-theme",
-                temaGuardado
-            );
+        /* =========================================================
+           CAMBIO DE PANTALLAS
+        ========================================================= */
 
-            actualizarIconoTema();
-        }
+        function mostrarPantalla(nombrePantalla) {
 
-        function cambiarTema() {
+            const pantallas = document.querySelectorAll(".screen");
 
-            const temaActual =
-                document.body.getAttribute("data-theme");
-
-            const nuevoTema =
-                temaActual === "oscuro"
-                    ? "claro"
-                    : "oscuro";
-
-            document.body.setAttribute(
-                "data-theme",
-                nuevoTema
-            );
-
-            localStorage.setItem(
-                "tema",
-                nuevoTema
-            );
-
-            actualizarIconoTema();
-        }
-
-        function actualizarIconoTema() {
-
-            const icono =
-                document.getElementById("iconoTema");
-
-            const tema =
-                document.body.getAttribute("data-theme");
-
-            if (!icono) return;
-
-            if (tema === "oscuro") {
-
-                icono.className =
-                    "fa-solid fa-sun";
-
-            } else {
-
-                icono.className =
-                    "fa-solid fa-moon";
-
-            }
-        }
-
-        // ====================================================
-        // NAVEGACIÓN SUAVE
-        // ====================================================
-
-        function irASeccion(id) {
-
-            const elemento =
-                document.getElementById(id);
-
-            if (!elemento) return;
-
-            elemento.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
+            pantallas.forEach(function(pantalla) {
+                pantalla.classList.remove("active");
             });
 
-        }
+            const pantalla = document.getElementById(nombrePantalla);
 
-        function irAlInicio() {
+            if (pantalla) {
+                pantalla.classList.add("active");
+            }
 
             window.scrollTo({
                 top: 0,
@@ -2161,759 +2052,890 @@
 
         }
 
-        // ====================================================
-        // MOSTRAR / OCULTAR CONTRASEÑA
-        // ====================================================
 
-        function mostrarContraseña(id, boton) {
+        /* =========================================================
+           MODAL RECUPERAR
+        ========================================================= */
 
-            const input =
-                document.getElementById(id);
+        function abrirRecuperacion() {
 
-            if (!input) return;
+            const modal = document.getElementById("modalRecuperar");
 
-            const icono =
-                boton.querySelector("i");
+            modal.classList.add("show");
 
-            if (input.type === "password") {
+            document.body.style.overflow = "hidden";
 
-                input.type = "text";
+        }
 
-                icono.className =
-                    "fa-solid fa-eye-slash";
+
+        function cerrarRecuperacion() {
+
+            const modal = document.getElementById("modalRecuperar");
+
+            modal.classList.remove("show");
+
+            document.body.style.overflow = "";
+
+            document.getElementById("recuperarForm").reset();
+
+            ocultarMensaje("recuperarMessage");
+
+        }
+
+
+        document.getElementById("modalRecuperar").addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+                    cerrarRecuperacion();
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           TEMA
+        ========================================================= */
+
+        function cambiarTema() {
+
+            const body = document.body;
+
+            const temaActual = body.getAttribute("data-theme");
+
+            if (temaActual === "oscuro") {
+
+                body.setAttribute("data-theme", "claro");
+
+                localStorage.setItem("temaMiCuenta", "claro");
+
+                document.querySelector("#btnTema i").className =
+                    "fa-solid fa-moon";
 
             } else {
 
-                input.type = "password";
+                body.setAttribute("data-theme", "oscuro");
 
-                icono.className =
-                    "fa-solid fa-eye";
+                localStorage.setItem("temaMiCuenta", "oscuro");
+
+                document.querySelector("#btnTema i").className =
+                    "fa-solid fa-sun";
 
             }
 
         }
 
-        // ====================================================
-        // MENSAJES
-        // ====================================================
 
-        function mostrarMensaje(
-            id,
-            texto,
-            tipo
-        ) {
+        function cargarTema() {
 
-            const elemento =
-                document.getElementById(id);
+            const temaGuardado =
+                localStorage.getItem("temaMiCuenta");
 
-            if (!elemento) return;
+            if (temaGuardado === "oscuro") {
+
+                document.body.setAttribute(
+                    "data-theme",
+                    "oscuro"
+                );
+
+                document.querySelector("#btnTema i").className =
+                    "fa-solid fa-sun";
+
+            } else {
+
+                document.body.setAttribute(
+                    "data-theme",
+                    "claro"
+                );
+
+                document.querySelector("#btnTema i").className =
+                    "fa-solid fa-moon";
+
+            }
+
+        }
+
+
+        cargarTema();
+
+
+        /* =========================================================
+           MENSAJES
+        ========================================================= */
+
+        function mostrarMensaje(id, texto, tipo) {
+
+            const elemento = document.getElementById(id);
+
+            if (!elemento) {
+                return;
+            }
 
             elemento.textContent = texto;
 
-            elemento.className =
-                "mensaje visible " + tipo;
+            elemento.className = "message show " + tipo;
 
         }
+
 
         function ocultarMensaje(id) {
 
-            const elemento =
-                document.getElementById(id);
+            const elemento = document.getElementById(id);
 
-            if (!elemento) return;
-
-            elemento.className =
-                "mensaje";
+            if (!elemento) {
+                return;
+            }
 
             elemento.textContent = "";
 
-        }
-
-        // ====================================================
-        // ESCAPAR HTML
-        // ====================================================
-
-        function escaparHTML(valor) {
-
-            if (
-                valor === null ||
-                valor === undefined
-            ) {
-                return "";
-            }
-
-            return String(valor)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            elemento.className = "message";
 
         }
 
-        // ====================================================
-        // LOGIN
-        // ====================================================
+
+        /* =========================================================
+           LOGIN
+        ========================================================= */
 
         document
-            .getElementById("formLogin")
-            .addEventListener(
-                "submit",
-                async function (event) {
+            .getElementById("loginForm")
+            .addEventListener("submit", async function(event) {
 
-                    event.preventDefault();
+                event.preventDefault();
 
-                    ocultarMensaje("mensajeLogin");
+                ocultarMensaje("loginMessage");
 
-                    const dni =
-                        document
-                            .getElementById("loginDni")
-                            .value
-                            .trim();
+                const dni =
+                    document
+                        .getElementById("loginDni")
+                        .value
+                        .trim();
 
-                    const contraseña =
-                        document
-                            .getElementById("loginContraseña")
-                            .value;
+                const contraseña =
+                    document
+                        .getElementById("loginPassword")
+                        .value;
 
-                    if (!dni || !contraseña) {
-
-                        mostrarMensaje(
-                            "mensajeLogin",
-                            "Ingresá tu DNI y contraseña.",
-                            "error"
-                        );
-
-                        return;
-                    }
-
-                    try {
-
-                        const respuesta =
-                            await fetch(
-                                "/api/login",
-                                {
-                                    method: "POST",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body: JSON.stringify({
-                                        dni,
-                                        contraseña
-                                    })
-                                }
-                            );
-
-                        const datos =
-                            await respuesta.json();
-
-                        if (!respuesta.ok) {
-
-                            throw new Error(
-                                datos.error ||
-                                "No se pudo iniciar sesión."
-                            );
-
-                        }
-
-                        mostrarMensaje(
-                            "mensajeLogin",
-                            "Inicio de sesión correcto.",
-                            "exito"
-                        );
-
-                        cargarCuenta(datos);
-
-                        setTimeout(
-                            function () {
-
-                                document
-                                    .getElementById("cuenta")
-                                    .classList
-                                    .remove("oculto");
-
-                                document
-                                    .getElementById("cuenta")
-                                    .scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "start"
-                                    });
-
-                            },
-                            500
-                        );
-
-                    } catch (error) {
-
-                        mostrarMensaje(
-                            "mensajeLogin",
-                            error.message,
-                            "error"
-                        );
-
-                    }
-
-                }
-            );
-
-        // ====================================================
-        // REGISTRO
-        // ====================================================
-
-        document
-            .getElementById("formRegistro")
-            .addEventListener(
-                "submit",
-                async function (event) {
-
-                    event.preventDefault();
-
-                    ocultarMensaje("mensajeRegistro");
-
-                    const dni =
-                        document
-                            .getElementById("registroDni")
-                            .value
-                            .trim();
-
-                    const nombre =
-                        document
-                            .getElementById("registroNombre")
-                            .value
-                            .trim();
-
-                    const apellido =
-                        document
-                            .getElementById("registroApellido")
-                            .value
-                            .trim();
-
-                    const telefono =
-                        document
-                            .getElementById("registroTelefono")
-                            .value
-                            .trim();
-
-                    const email =
-                        document
-                            .getElementById("registroEmail")
-                            .value
-                            .trim();
-
-                    const carrera =
-                        document
-                            .getElementById("registroCarrera")
-                            .value;
-
-                    const curso =
-                        document
-                            .getElementById("registroCurso")
-                            .value;
-
-                    const contraseña =
-                        document
-                            .getElementById("registroContraseña")
-                            .value;
-
-                    const confirmar =
-                        document
-                            .getElementById("registroConfirmar")
-                            .value;
-
-                    if (
-                        contraseña !==
-                        confirmar
-                    ) {
-
-                        mostrarMensaje(
-                            "mensajeRegistro",
-                            "Las contraseñas no coinciden.",
-                            "error"
-                        );
-
-                        return;
-                    }
-
-                    if (contraseña.length < 6) {
-
-                        mostrarMensaje(
-                            "mensajeRegistro",
-                            "La contraseña debe tener al menos 6 caracteres.",
-                            "error"
-                        );
-
-                        return;
-                    }
-
-                    try {
-
-                        const respuesta =
-                            await fetch(
-                                "/api/alumnos",
-                                {
-                                    method: "POST",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body: JSON.stringify({
-
-                                        dni,
-                                        nombre,
-                                        apellido,
-                                        telefono,
-                                        email,
-                                        carrera,
-                                        curso,
-                                        contraseña
-
-                                    })
-                                }
-                            );
-
-                        const datos =
-                            await respuesta.json();
-
-                        if (!respuesta.ok) {
-
-                            throw new Error(
-                                datos.error ||
-                                "No se pudo registrar el alumno."
-                            );
-
-                        }
-
-                        mostrarMensaje(
-                            "mensajeRegistro",
-                            "¡Cuenta creada correctamente! Ahora podés ingresar.",
-                            "exito"
-                        );
-
-                        document
-                            .getElementById("formRegistro")
-                            .reset();
-
-                        setTimeout(
-                            function () {
-
-                                irASeccion(
-                                    "seccionLogin"
-                                );
-
-                                document
-                                    .getElementById("loginDni")
-                                    .value = dni;
-
-                            },
-                            1200
-                        );
-
-                    } catch (error) {
-
-                        mostrarMensaje(
-                            "mensajeRegistro",
-                            error.message,
-                            "error"
-                        );
-
-                    }
-
-                }
-            );
-
-        // ====================================================
-        // RECUPERAR CUENTA
-        // ====================================================
-
-        document
-            .getElementById("formRecuperar")
-            .addEventListener(
-                "submit",
-                async function (event) {
-
-                    event.preventDefault();
-
-                    const dni =
-                        document
-                            .getElementById("recuperarDni")
-                            .value
-                            .trim();
-
-                    const email =
-                        document
-                            .getElementById("recuperarEmail")
-                            .value
-                            .trim();
-
-                    if (!dni || !email) {
-
-                        mostrarMensaje(
-                            "mensajeRecuperar",
-                            "Completá el DNI y el correo electrónico.",
-                            "error"
-                        );
-
-                        return;
-                    }
+                if (!/^\d{7,8}$/.test(dni)) {
 
                     mostrarMensaje(
-                        "mensajeRecuperar",
-                        "Solicitud recibida. La recuperación automática por correo requiere configurar un servicio de envío o Supabase Auth.",
-                        "info"
+                        "loginMessage",
+                        "Ingresá un DNI válido de 7 u 8 números.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (!contraseña) {
+
+                    mostrarMensaje(
+                        "loginMessage",
+                        "Ingresá tu contraseña.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    const response = await fetch(
+                        "/api/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                dni: dni,
+                                contraseña: contraseña
+                            })
+                        }
+                    );
+
+
+                    const data = await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            "No se pudo iniciar sesión."
+                        );
+
+                    }
+
+
+                    alumnoActual = data.alumno || data;
+
+                    cuotasActuales = data.cuotas || [];
+
+
+                    cargarCuenta(data);
+
+
+                    document
+                        .getElementById("loginForm")
+                        .reset();
+
+
+                    mostrarPantalla("cuenta");
+
+                } catch (error) {
+
+                    mostrarMensaje(
+                        "loginMessage",
+                        error.message ||
+                        "Ocurrió un error al iniciar sesión.",
+                        "error"
                     );
 
                 }
-            );
 
-        // ====================================================
-        // CARGAR CUENTA
-        // ====================================================
+            });
 
-        function cargarCuenta(datos) {
 
-            const alumno =
-                datos.alumno || {};
+        /* =========================================================
+           REGISTRO
+        ========================================================= */
 
-            const cuotas =
-                Array.isArray(datos.cuotas)
-                    ? datos.cuotas
-                    : [];
+        document
+            .getElementById("registroForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+                ocultarMensaje("registroMessage");
+
+
+                const dni =
+                    document
+                        .getElementById("registroDni")
+                        .value
+                        .trim();
+
+                const nombre =
+                    document
+                        .getElementById("registroNombre")
+                        .value
+                        .trim();
+
+                const apellido =
+                    document
+                        .getElementById("registroApellido")
+                        .value
+                        .trim();
+
+                const telefono =
+                    document
+                        .getElementById("registroTelefono")
+                        .value
+                        .trim();
+
+                const email =
+                    document
+                        .getElementById("registroEmail")
+                        .value
+                        .trim();
+
+                const carrera =
+                    document
+                        .getElementById("registroCarrera")
+                        .value;
+
+                const curso =
+                    document
+                        .getElementById("registroCurso")
+                        .value
+                        .trim();
+
+                const contraseña =
+                    document
+                        .getElementById("registroPassword")
+                        .value;
+
+                const confirmar =
+                    document
+                        .getElementById("registroPasswordConfirm")
+                        .value;
+
+
+                if (!/^\d{7,8}$/.test(dni)) {
+
+                    mostrarMensaje(
+                        "registroMessage",
+                        "El DNI debe tener 7 u 8 números.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (contraseña.length < 6) {
+
+                    mostrarMensaje(
+                        "registroMessage",
+                        "La contraseña debe tener al menos 6 caracteres.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (contraseña !== confirmar) {
+
+                    mostrarMensaje(
+                        "registroMessage",
+                        "Las contraseñas no coinciden.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    const response = await fetch(
+                        "/api/alumnos",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                dni: dni,
+
+                                nombre: nombre,
+
+                                apellido: apellido,
+
+                                telefono: telefono,
+
+                                email: email,
+
+                                carrera: carrera,
+
+                                curso: curso,
+
+                                contraseña: contraseña
+
+                            })
+                        }
+                    );
+
+
+                    const data = await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            "No se pudo crear la cuenta."
+                        );
+
+                    }
+
+
+                    mostrarMensaje(
+                        "registroMessage",
+                        "Cuenta creada correctamente. Ya podés ingresar.",
+                        "success"
+                    );
+
+
+                    document
+                        .getElementById("registroForm")
+                        .reset();
+
+
+                    setTimeout(function() {
+
+                        document
+                            .getElementById("loginDni")
+                            .value = dni;
+
+                        mostrarPantalla("login");
+
+                    }, 1200);
+
+
+                } catch (error) {
+
+                    mostrarMensaje(
+                        "registroMessage",
+                        error.message ||
+                        "Ocurrió un error al crear la cuenta.",
+                        "error"
+                    );
+
+                }
+
+            });
+
+
+        /* =========================================================
+           CARGAR CUENTA
+        ========================================================= */
+
+        function cargarCuenta(data) {
+
+            const alumno = data.alumno || data;
+
+            const cuotas = data.cuotas || [];
+
+            const saldo = Number(data.saldo || 0);
+
+
+            alumnoActual = alumno;
+
+            cuotasActuales = cuotas;
+
 
             const nombreCompleto =
-                (
-                    (alumno.nombre || "") +
-                    " " +
-                    (alumno.apellido || "")
-                ).trim();
-
-            document
-                .getElementById("perfilNombre")
-                .textContent =
-                nombreCompleto || "Alumno";
-
-            const iniciales =
-                obtenerIniciales(
+                [
                     alumno.nombre,
                     alumno.apellido
-                );
+                ]
+                .filter(Boolean)
+                .join(" ");
 
-            document
-                .getElementById("perfilAvatar")
-                .textContent =
-                iniciales;
 
-            document
-                .getElementById("datoDni")
-                .textContent =
+            document.getElementById(
+                "cuentaNombre"
+            ).textContent =
+                nombreCompleto || "Alumno";
+
+
+            document.getElementById(
+                "cuentaDni"
+            ).textContent =
                 alumno.dni || "-";
 
-            document
-                .getElementById("datoTelefono")
-                .textContent =
+
+            document.getElementById(
+                "cuentaCarrera"
+            ).textContent =
+                alumno.carrera || "-";
+
+
+            document.getElementById(
+                "perfilDni"
+            ).textContent =
+                alumno.dni || "-";
+
+
+            document.getElementById(
+                "perfilNombre"
+            ).textContent =
+                alumno.nombre || "-";
+
+
+            document.getElementById(
+                "perfilApellido"
+            ).textContent =
+                alumno.apellido || "-";
+
+
+            document.getElementById(
+                "perfilTelefono"
+            ).textContent =
                 alumno.telefono || "-";
 
-            document
-                .getElementById("datoEmail")
-                .textContent =
+
+            document.getElementById(
+                "perfilEmail"
+            ).textContent =
                 alumno.email || "-";
 
-            document
-                .getElementById("datoCurso")
-                .textContent =
-                alumno.curso
-                    ? alumno.curso + "° año"
-                    : "-";
 
-            document
-                .getElementById("perfilCarrera")
-                .textContent =
-                alumno.carrera || "Carrera";
+            document.getElementById(
+                "perfilCarrera"
+            ).textContent =
+                alumno.carrera || "-";
 
-            const saldo =
-                Number(datos.saldo || 0);
 
-            document
-                .getElementById("saldoCuenta")
-                .textContent =
-                formatearPesos(saldo);
+            document.getElementById(
+                "perfilCurso"
+            ).textContent =
+                alumno.curso || "-";
 
-            const pagadas =
-                cuotas.filter(
-                    cuota => Boolean(cuota.pagado)
-                ).length;
 
-            document
-                .getElementById("totalCuotas")
-                .textContent =
+            document.getElementById(
+                "saldoCuenta"
+            ).textContent =
+                formatearNumero(saldo);
+
+
+            document.getElementById(
+                "totalCuotas"
+            ).textContent =
                 cuotas.length;
 
-            document
-                .getElementById("cuotasPagadas")
-                .textContent =
-                pagadas;
 
-            cargarTablaCuotas(cuotas);
+            document.getElementById(
+                "estadoCuenta"
+            ).textContent =
+                saldo > 0
+                    ? "Pendiente"
+                    : "Al día";
+
+
+            cargarCuotas(cuotas);
 
             cargarAnotaciones(alumno);
 
         }
 
-        // ====================================================
-        // INICIALES
-        // ====================================================
 
-        function obtenerIniciales(
-            nombre,
-            apellido
-        ) {
+        /* =========================================================
+           CUOTAS
+        ========================================================= */
 
-            const primera =
-                String(nombre || "")
-                    .trim()
-                    .charAt(0)
-                    .toUpperCase();
+        function cargarCuotas(cuotas) {
 
-            const segunda =
-                String(apellido || "")
-                    .trim()
-                    .charAt(0)
-                    .toUpperCase();
-
-            return (
-                primera +
-                segunda
-            ) || "--";
-
-        }
-
-        // ====================================================
-        // FORMATO PESOS
-        // ====================================================
-
-        function formatearPesos(valor) {
-
-            return new Intl.NumberFormat(
-                "es-AR",
-                {
-                    style: "currency",
-                    currency: "ARS",
-                    minimumFractionDigits: 2
-                }
-            ).format(
-                Number(valor || 0)
-            );
-
-        }
-
-        // ====================================================
-        // TABLA CUOTAS
-        // ====================================================
-
-        function cargarTablaCuotas(cuotas) {
-
-            const tabla =
+            const container =
                 document.getElementById(
-                    "tablaCuotas"
+                    "cuotasContainer"
                 );
 
-            tabla.innerHTML = "";
 
-            if (!cuotas.length) {
+            if (!cuotas || cuotas.length === 0) {
 
-                tabla.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="sin-datos">
-                            No hay cuotas registradas.
-                        </td>
-                    </tr>
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-receipt"></i>
+                        <p>No hay cuotas registradas.</p>
+                    </div>
                 `;
 
                 return;
             }
 
-            cuotas.forEach(
-                function (cuota) {
 
-                    const fila =
-                        document.createElement("tr");
+            let html = `
 
-                    const concepto =
-                        escaparHTML(
-                            cuota.concepto ||
-                            "Cuota"
-                        );
+                <table>
 
-                    const vencimiento =
-                        formatearFecha(
-                            cuota.vencimiento
-                        );
+                    <thead>
 
-                    const importe =
-                        formatearPesos(
-                            cuota.importe
-                        );
+                        <tr>
 
-                    const pagado =
-                        Boolean(
-                            cuota.pagado
-                        );
+                            <th>Concepto</th>
 
-                    fila.innerHTML = `
+                            <th>Vencimiento</th>
+
+                            <th>Importe</th>
+
+                            <th>Estado</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+            `;
+
+
+            cuotas.forEach(function(cuota) {
+
+                const pagado =
+                    cuota.pagado === true ||
+                    cuota.pagado === 1 ||
+                    cuota.pagado === "true";
+
+
+                const importe =
+                    Number(cuota.importe || 0);
+
+
+                const fecha =
+                    formatearFecha(
+                        cuota.vencimiento
+                    );
+
+
+                html += `
+
+                    <tr>
 
                         <td>
-                            ${concepto}
+                            ${escapeHTML(
+                                cuota.concepto || "-"
+                            )}
                         </td>
 
                         <td>
-                            ${vencimiento}
+                            ${fecha}
                         </td>
 
                         <td>
-                            ${importe}
+                            $${formatearNumero(importe)}
                         </td>
 
                         <td>
 
-                            <span class="estado ${
+                            ${
                                 pagado
-                                    ? "pagado"
-                                    : "pendiente"
-                            }">
 
-                                ${
-                                    pagado
-                                        ? "Pagado"
-                                        : "Pendiente"
-                                }
+                                ? `
+                                    <span class="status paid">
+                                        <i class="fa-solid fa-check"></i>
+                                        Pagada
+                                    </span>
+                                `
 
-                            </span>
+                                : `
+                                    <span class="status pending">
+                                        <i class="fa-solid fa-clock"></i>
+                                        Pendiente
+                                    </span>
+                                `
+                            }
 
                         </td>
 
-                    `;
+                    </tr>
 
-                    tabla.appendChild(fila);
+                `;
 
-                }
-            );
+            });
 
-        }
 
-        // ====================================================
-        // FECHAS
-        // ====================================================
+            html += `
 
-        function formatearFecha(fecha) {
+                    </tbody>
 
-            if (!fecha) {
-                return "-";
-            }
+                </table>
 
-            const fechaObjeto =
-                new Date(fecha);
+            `;
 
-            if (
-                Number.isNaN(
-                    fechaObjeto.getTime()
-                )
-            ) {
-                return fecha;
-            }
 
-            return fechaObjeto.toLocaleDateString(
-                "es-AR"
-            );
+            container.innerHTML = html;
 
         }
 
-        // ====================================================
-        // ANOTACIONES
-        // ====================================================
+
+        /* =========================================================
+           ANOTACIONES
+        ========================================================= */
 
         function cargarAnotaciones(alumno) {
 
-            const contenedor =
+            const container =
                 document.getElementById(
-                    "listaAnotaciones"
+                    "anotacionesContainer"
                 );
 
-            contenedor.innerHTML = "";
 
-            if (!alumno.anotaciones) {
+            let anotaciones = [];
 
-                contenedor.innerHTML = `
-                    <p class="sin-datos">
-                        No hay anotaciones registradas.
-                    </p>
-                `;
 
-                return;
-            }
-
-            let anotaciones =
-                alumno.anotaciones;
-
-            if (
-                typeof anotaciones ===
-                "string"
-            ) {
+            if (Array.isArray(alumno.anotaciones)) {
 
                 anotaciones =
-                    [anotaciones];
+                    alumno.anotaciones;
+
+            } else if (
+                typeof alumno.anotaciones === "string" &&
+                alumno.anotaciones.trim() !== ""
+            ) {
+
+                anotaciones = [
+                    alumno.anotaciones
+                ];
 
             }
 
+
             if (
-                !Array.isArray(anotaciones) ||
-                anotaciones.length === 0
+                anotaciones.length === 0 &&
+                alumno.anotacion
             ) {
 
-                contenedor.innerHTML = `
-                    <p class="sin-datos">
-                        No hay anotaciones registradas.
-                    </p>
+                anotaciones = [
+                    alumno.anotacion
+                ];
+
+            }
+
+
+            if (anotaciones.length === 0) {
+
+                container.innerHTML = `
+
+                    <div class="empty-state">
+
+                        <i class="fa-solid fa-note-sticky"></i>
+
+                        <p>
+                            No hay anotaciones disponibles.
+                        </p>
+
+                    </div>
+
                 `;
 
                 return;
             }
 
-            anotaciones.forEach(
-                function (texto) {
 
-                    const div =
-                        document.createElement(
-                            "div"
+            container.innerHTML =
+                anotaciones
+                    .map(function(anotacion) {
+
+                        return `
+
+                            <div class="annotation">
+
+                                ${escapeHTML(
+                                    String(anotacion)
+                                )}
+
+                            </div>
+
+                        `;
+
+                    })
+                    .join("");
+
+        }
+
+
+        /* =========================================================
+           RECUPERACIÓN
+        ========================================================= */
+
+        document
+            .getElementById("recuperarForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
+
+                    event.preventDefault();
+
+                    ocultarMensaje(
+                        "recuperarMessage"
+                    );
+
+
+                    const dni =
+                        document
+                            .getElementById(
+                                "recuperarDni"
+                            )
+                            .value
+                            .trim();
+
+
+                    const email =
+                        document
+                            .getElementById(
+                                "recuperarEmail"
+                            )
+                            .value
+                            .trim();
+
+
+                    const telefono =
+                        document
+                            .getElementById(
+                                "recuperarTelefono"
+                            )
+                            .value
+                            .trim();
+
+
+                    if (!/^\d{7,8}$/.test(dni)) {
+
+                        mostrarMensaje(
+                            "recuperarMessage",
+                            "Ingresá un DNI válido.",
+                            "error"
                         );
 
-                    div.className =
-                        "anotacion";
+                        return;
+                    }
 
-                    div.textContent =
-                        texto;
 
-                    contenedor.appendChild(
-                        div
+                    /*
+                     * La recuperación queda como solicitud
+                     * visual en esta versión.
+                     *
+                     * No se envía un correo real porque
+                     * eso requiere un sistema de autenticación
+                     * o un servicio de correo.
+                     */
+
+                    mostrarMensaje(
+                        "recuperarMessage",
+                        "Solicitud recibida. Verificá tus datos o comunicate con la institución para recuperar el acceso.",
+                        "success"
                     );
 
                 }
             );
 
+
+        /* =========================================================
+           CERRAR SESIÓN
+        ========================================================= */
+
+        function cerrarSesion() {
+
+            alumnoActual = null;
+
+            cuotasActuales = [];
+
+
+            document
+                .getElementById("loginForm")
+                .reset();
+
+
+            ocultarMensaje(
+                "loginMessage"
+            );
+
+
+            mostrarPantalla(
+                "inicio"
+            );
+
         }
 
-        // ====================================================
-        // DESCARGAR PDF
-        // ====================================================
 
-        function descargarResumenPDF() {
+        /* =========================================================
+           PDF
+        ========================================================= */
+
+        function descargarPDF() {
+
+            if (!alumnoActual) {
+
+                return;
+
+            }
+
 
             if (
-                !window.jspdf ||
-                !window.jspdf.jsPDF
+                typeof window.jspdf ===
+                "undefined"
             ) {
 
                 alert(
@@ -2921,272 +2943,337 @@
                 );
 
                 return;
+
             }
+
 
             const {
                 jsPDF
             } = window.jspdf;
 
-            const pdf =
+
+            const doc =
                 new jsPDF();
 
-            const nombre =
-                document
-                    .getElementById(
-                        "perfilNombre"
-                    )
-                    .textContent;
 
-            const dni =
-                document
-                    .getElementById(
-                        "datoDni"
-                    )
-                    .textContent;
+            const alumno =
+                alumnoActual;
 
-            const carrera =
-                document
-                    .getElementById(
-                        "perfilCarrera"
-                    )
-                    .textContent;
 
-            const email =
-                document
-                    .getElementById(
-                        "datoEmail"
-                    )
-                    .textContent;
+            const nombreCompleto =
+                [
+                    alumno.nombre,
+                    alumno.apellido
+                ]
+                .filter(Boolean)
+                .join(" ");
 
-            const telefono =
-                document
-                    .getElementById(
-                        "datoTelefono"
-                    )
-                    .textContent;
 
-            const curso =
-                document
-                    .getElementById(
-                        "datoCurso"
-                    )
-                    .textContent;
+            let y = 20;
+
+
+            doc.setFontSize(20);
+
+            doc.setFont("helvetica", "bold");
+
+            doc.text(
+                "MI CUENTA ISPI",
+                20,
+                y
+            );
+
+
+            y += 12;
+
+
+            doc.setFontSize(14);
+
+            doc.setFont("helvetica", "normal");
+
+            doc.text(
+                "Resumen de cuenta del alumno",
+                20,
+                y
+            );
+
+
+            y += 18;
+
+
+            doc.setFontSize(11);
+
+
+            doc.text(
+                "Nombre: " +
+                nombreCompleto,
+                20,
+                y
+            );
+
+            y += 8;
+
+
+            doc.text(
+                "DNI: " +
+                (alumno.dni || "-"),
+                20,
+                y
+            );
+
+            y += 8;
+
+
+            doc.text(
+                "Carrera: " +
+                (alumno.carrera || "-"),
+                20,
+                y
+            );
+
+            y += 8;
+
+
+            doc.text(
+                "Curso: " +
+                (alumno.curso || "-"),
+                20,
+                y
+            );
+
+            y += 15;
+
+
+            doc.setFont("helvetica", "bold");
+
+            doc.text(
+                "Cuotas",
+                20,
+                y
+            );
+
+
+            y += 10;
+
+
+            doc.setFont("helvetica", "normal");
+
+
+            if (
+                cuotasActuales.length === 0
+            ) {
+
+                doc.text(
+                    "No hay cuotas registradas.",
+                    20,
+                    y
+                );
+
+            } else {
+
+                cuotasActuales.forEach(
+                    function(cuota) {
+
+                        if (y > 270) {
+
+                            doc.addPage();
+
+                            y = 20;
+
+                        }
+
+
+                        const pagado =
+                            cuota.pagado === true ||
+                            cuota.pagado === 1 ||
+                            cuota.pagado === "true";
+
+
+                        const linea =
+                            (cuota.concepto || "-") +
+                            " - " +
+                            formatearFecha(
+                                cuota.vencimiento
+                            ) +
+                            " - $" +
+                            formatearNumero(
+                                Number(
+                                    cuota.importe || 0
+                                )
+                            ) +
+                            " - " +
+                            (
+                                pagado
+                                    ? "Pagada"
+                                    : "Pendiente"
+                            );
+
+
+                        doc.text(
+                            linea,
+                            20,
+                            y
+                        );
+
+
+                        y += 8;
+
+                    }
+                );
+
+            }
+
+
+            y += 12;
+
 
             const saldo =
-                document
-                    .getElementById(
-                        "saldoCuenta"
-                    )
-                    .textContent;
+                cuotasActuales
+                    .filter(function(cuota) {
 
-            const total =
-                document
-                    .getElementById(
-                        "totalCuotas"
-                    )
-                    .textContent;
+                        return !(
+                            cuota.pagado === true ||
+                            cuota.pagado === 1 ||
+                            cuota.pagado === "true"
+                        );
 
-            const pagadas =
-                document
-                    .getElementById(
-                        "cuotasPagadas"
-                    )
-                    .textContent;
+                    })
+                    .reduce(
+                        function(total, cuota) {
 
-            pdf.setFontSize(22);
+                            return total +
+                                Number(
+                                    cuota.importe || 0
+                                );
 
-            pdf.text(
-                "Mi Cuenta ISPI",
-                20,
-                25
-            );
-
-            pdf.setFontSize(11);
-
-            pdf.text(
-                "Instituto San Juan Bautista",
-                20,
-                33
-            );
-
-            pdf.line(
-                20,
-                38,
-                190,
-                38
-            );
-
-            pdf.setFontSize(15);
-
-            pdf.text(
-                "Datos del alumno",
-                20,
-                50
-            );
-
-            pdf.setFontSize(11);
-
-            pdf.text(
-                "Nombre: " + nombre,
-                20,
-                60
-            );
-
-            pdf.text(
-                "DNI: " + dni,
-                20,
-                68
-            );
-
-            pdf.text(
-                "Carrera: " + carrera,
-                20,
-                76
-            );
-
-            pdf.text(
-                "Curso: " + curso,
-                20,
-                84
-            );
-
-            pdf.text(
-                "Teléfono: " + telefono,
-                20,
-                92
-            );
-
-            pdf.text(
-                "Correo: " + email,
-                20,
-                100
-            );
-
-            pdf.setFontSize(15);
-
-            pdf.text(
-                "Resumen de cuenta",
-                20,
-                118
-            );
-
-            pdf.setFontSize(11);
-
-            pdf.text(
-                "Saldo pendiente: " + saldo,
-                20,
-                128
-            );
-
-            pdf.text(
-                "Total de cuotas: " + total,
-                20,
-                136
-            );
-
-            pdf.text(
-                "Cuotas pagadas: " + pagadas,
-                20,
-                144
-            );
-
-            const fecha =
-                new Date()
-                    .toLocaleDateString(
-                        "es-AR"
+                        },
+                        0
                     );
 
-            pdf.text(
-                "Fecha de emisión: " + fecha,
+
+            doc.setFont("helvetica", "bold");
+
+            doc.text(
+                "Saldo pendiente: $" +
+                formatearNumero(saldo),
                 20,
-                162
+                y
             );
 
-            pdf.line(
-                20,
-                170,
-                190,
-                170
-            );
 
-            pdf.setFontSize(9);
-
-            pdf.text(
-                "Documento generado desde Mi Cuenta ISPI.",
-                20,
-                182
-            );
-
-            pdf.save(
-                "resumen-cuenta-ispi.pdf"
+            doc.save(
+                "mi-cuenta-ispi.pdf"
             );
 
         }
 
-        // ====================================================
-        // CERRAR SESIÓN
-        // ====================================================
 
-        function cerrarSesion() {
+        /* =========================================================
+           FUNCIONES AUXILIARES
+        ========================================================= */
 
-            document
-                .getElementById("cuenta")
-                .classList
-                .add("oculto");
+        function formatearNumero(numero) {
 
-            document
-                .getElementById("formLogin")
-                .reset();
-
-            ocultarMensaje(
-                "mensajeLogin"
+            return Number(
+                numero || 0
+            ).toLocaleString(
+                "es-AR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
             );
-
-            irAlInicio();
 
         }
 
-        // ====================================================
-        // BOTÓN ARRIBA
-        // ====================================================
 
-        window.addEventListener(
-            "scroll",
-            function () {
+        function formatearFecha(fecha) {
 
-                const boton =
-                    document.getElementById(
-                        "btnArriba"
-                    );
+            if (!fecha) {
+                return "-";
+            }
+
+
+            const fechaObjeto =
+                new Date(fecha);
+
+
+            if (isNaN(
+                fechaObjeto.getTime()
+            )) {
+
+                return fecha;
+
+            }
+
+
+            return fechaObjeto.toLocaleDateString(
+                "es-AR"
+            );
+
+        }
+
+
+        function escapeHTML(texto) {
+
+            return String(texto)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =========================================================
+           ESCAPE CON TECLA ESC
+        ========================================================= */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
 
                 if (
-                    window.scrollY > 500
+                    event.key === "Escape"
                 ) {
 
-                    boton.classList.add(
-                        "visible"
-                    );
+                    const modal =
+                        document.getElementById(
+                            "modalRecuperar"
+                        );
 
-                } else {
 
-                    boton.classList.remove(
-                        "visible"
-                    );
+                    if (
+                        modal.classList.contains(
+                            "show"
+                        )
+                    ) {
+
+                        cerrarRecuperacion();
+
+                    }
 
                 }
 
             }
         );
 
-        // ====================================================
-        // INICIAR
-        // ====================================================
-
-        cargarTema();
-
     </script>
 
 </body>
-
 </html>
-```
