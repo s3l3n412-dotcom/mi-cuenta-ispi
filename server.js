@@ -63,7 +63,7 @@ app.get("/prueba-supabase", async (req, res) => {
 
 app.get("/api/cuenta/:dni", async (req, res) => {
     try {
-        const dni = req.params.dni;
+        const dni = String(req.params.dni).trim();
 
         if (!/^\d{7,8}$/.test(dni)) {
             return res.status(400).json({
@@ -71,7 +71,6 @@ app.get("/api/cuenta/:dni", async (req, res) => {
             });
         }
 
-        // Buscar alumno
         const {
             data: alumno,
             error: errorAlumno
@@ -99,7 +98,6 @@ app.get("/api/cuenta/:dni", async (req, res) => {
             });
         }
 
-        // Buscar cuotas
         const {
             data: cuotas,
             error: errorCuotas
@@ -121,20 +119,26 @@ app.get("/api/cuenta/:dni", async (req, res) => {
             });
         }
 
-        // Calcular saldo
+        // ==========================================
+        // CALCULAR SALDO
+        // ==========================================
+
         const saldo = cuotas
             .filter(cuota => !cuota.pagado)
-            .reduce(
-                (total, cuota) => {
-                    return total + Number(
-                        cuota["cuota.importe"] || 0
-                    );
-                },
-                0
-            );
+            .reduce((total, cuota) => {
+                return total + Number(cuota.importe || 0);
+            }, 0);
+
+        // ==========================================
+        // NO ENVIAR LA CONTRASEÑA AL FRONTEND
+        // ==========================================
+
+        const alumnoSeguro = { ...alumno };
+
+        delete alumnoSeguro.contraseña;
 
         res.json({
-            alumno: alumno,
+            alumno: alumnoSeguro,
             cuotas: cuotas,
             saldo: saldo
         });
@@ -163,7 +167,8 @@ app.post("/api/alumnos", async (req, res) => {
             email,
             telefono,
             carrera,
-            curso
+            curso,
+            contraseña
         } = req.body;
 
         console.log("=================================");
@@ -188,7 +193,8 @@ app.post("/api/alumnos", async (req, res) => {
             !email ||
             !telefono ||
             !carrera ||
-            !curso
+            !curso ||
+            !contraseña
         ) {
             return res.status(400).json({
                 error: "Todos los campos son obligatorios."
@@ -219,7 +225,17 @@ app.post("/api/alumnos", async (req, res) => {
         }
 
         // ==========================================
-        // BUSCAR SI EL DNI YA EXISTE
+        // VALIDAR CONTRASEÑA
+        // ==========================================
+
+        if (String(contraseña).length < 6) {
+            return res.status(400).json({
+                error: "La contraseña debe tener al menos 6 caracteres."
+            });
+        }
+
+        // ==========================================
+        // BUSCAR DNI EXISTENTE
         // ==========================================
 
         const {
@@ -253,7 +269,41 @@ app.post("/api/alumnos", async (req, res) => {
         }
 
         // ==========================================
-        // INSERTAR ALUMNO EN SUPABASE
+        // BUSCAR EMAIL EXISTENTE
+        // ==========================================
+
+        const {
+            data: emailExistente,
+            error: errorEmail
+        } = await supabase
+            .from("alumnos")
+            .select("id")
+            .eq("email", String(email).trim())
+            .maybeSingle();
+
+        if (errorEmail) {
+            console.error(
+                "ERROR VERIFICANDO EMAIL:",
+                errorEmail
+            );
+
+            return res.status(500).json({
+                error: "No se pudo verificar el correo electrónico.",
+                detalle: errorEmail.message,
+                codigo: errorEmail.code || "",
+                detalles: errorEmail.details || "",
+                hint: errorEmail.hint || ""
+            });
+        }
+
+        if (emailExistente) {
+            return res.status(409).json({
+                error: "El correo electrónico ya se encuentra registrado."
+            });
+        }
+
+        // ==========================================
+        // INSERTAR ALUMNO
         // ==========================================
 
         const {
@@ -269,54 +319,23 @@ app.post("/api/alumnos", async (req, res) => {
                     email: String(email).trim(),
                     telefono: String(telefono).trim(),
                     carrera: String(carrera).trim(),
-                    curso: Number(curso)
+                    curso: Number(curso),
+                    contraseña: String(contraseña)
                 }
             ])
             .select()
             .single();
 
-        // ==========================================
-        // MOSTRAR ERROR COMPLETO
-        // ==========================================
-
         if (errorRegistro) {
 
-            console.error(
-                "================================="
-            );
-
-            console.error(
-                "ERROR COMPLETO AL REGISTRAR:"
-            );
-
-            console.error(
-                "Mensaje:",
-                errorRegistro.message
-            );
-
-            console.error(
-                "Código:",
-                errorRegistro.code
-            );
-
-            console.error(
-                "Detalles:",
-                errorRegistro.details
-            );
-
-            console.error(
-                "Hint:",
-                errorRegistro.hint
-            );
-
-            console.error(
-                "Objeto completo:",
-                errorRegistro
-            );
-
-            console.error(
-                "================================="
-            );
+            console.error("=================================");
+            console.error("ERROR COMPLETO AL REGISTRAR:");
+            console.error("Mensaje:", errorRegistro.message);
+            console.error("Código:", errorRegistro.code);
+            console.error("Detalles:", errorRegistro.details);
+            console.error("Hint:", errorRegistro.hint);
+            console.error("Objeto completo:", errorRegistro);
+            console.error("=================================");
 
             return res.status(500).json({
                 error: "No se pudo registrar el alumno.",
@@ -328,38 +347,178 @@ app.post("/api/alumnos", async (req, res) => {
         }
 
         // ==========================================
-        // REGISTRO CORRECTO
+        // OCULTAR CONTRASEÑA EN LA RESPUESTA
         // ==========================================
+
+        const alumnoSeguro = { ...nuevoAlumno };
+
+        delete alumnoSeguro.contraseña;
 
         console.log(
             "ALUMNO REGISTRADO CORRECTAMENTE:"
         );
 
-        console.log(nuevoAlumno);
+        console.log(alumnoSeguro);
 
         res.status(201).json({
             mensaje: "Alumno registrado correctamente.",
-            alumno: nuevoAlumno
+            alumno: alumnoSeguro
         });
 
     } catch (error) {
 
-        console.error(
-            "================================="
-        );
-
-        console.error(
-            "ERROR INTERNO REGISTRANDO ALUMNO:"
-        );
-
+        console.error("=================================");
+        console.error("ERROR INTERNO REGISTRANDO ALUMNO:");
         console.error(error);
-
-        console.error(
-            "================================="
-        );
+        console.error("=================================");
 
         res.status(500).json({
             error: "Error interno del servidor.",
+            detalle: error.message
+        });
+    }
+});
+
+// ==========================================
+// LOGIN
+// ==========================================
+
+app.post("/api/login", async (req, res) => {
+    try {
+
+        const {
+            dni,
+            contraseña
+        } = req.body;
+
+        // ==========================================
+        // VALIDACIONES
+        // ==========================================
+
+        if (!dni || !contraseña) {
+            return res.status(400).json({
+                error: "Ingresá tu DNI y contraseña."
+            });
+        }
+
+        const dniTexto = String(dni).trim();
+
+        if (!/^\d{7,8}$/.test(dniTexto)) {
+            return res.status(400).json({
+                error: "El DNI debe contener 7 u 8 números."
+            });
+        }
+
+        // ==========================================
+        // BUSCAR ALUMNO
+        // ==========================================
+
+        const {
+            data: alumno,
+            error: errorAlumno
+        } = await supabase
+            .from("alumnos")
+            .select("*")
+            .eq("dni", dniTexto)
+            .maybeSingle();
+
+        if (errorAlumno) {
+            console.error(
+                "ERROR BUSCANDO ALUMNO PARA LOGIN:",
+                errorAlumno
+            );
+
+            return res.status(500).json({
+                error: "No se pudo verificar la cuenta.",
+                detalle: errorAlumno.message,
+                codigo: errorAlumno.code || "",
+                detalles: errorAlumno.details || "",
+                hint: errorAlumno.hint || ""
+            });
+        }
+
+        if (!alumno) {
+            return res.status(401).json({
+                error: "El DNI o la contraseña son incorrectos."
+            });
+        }
+
+        // ==========================================
+        // VERIFICAR CONTRASEÑA
+        // ==========================================
+
+        if (
+            String(alumno.contraseña) !==
+            String(contraseña)
+        ) {
+            return res.status(401).json({
+                error: "El DNI o la contraseña son incorrectos."
+            });
+        }
+
+        // ==========================================
+        // BUSCAR CUOTAS
+        // ==========================================
+
+        const {
+            data: cuotas,
+            error: errorCuotas
+        } = await supabase
+            .from("cuotas")
+            .select("*")
+            .eq("alumno_id", alumno.id)
+            .order("vencimiento", { ascending: true });
+
+        if (errorCuotas) {
+            console.error(
+                "ERROR BUSCANDO CUOTAS:",
+                errorCuotas
+            );
+
+            return res.status(500).json({
+                error: "La cuenta existe, pero no se pudieron cargar las cuotas.",
+                detalle: errorCuotas.message,
+                codigo: errorCuotas.code || "",
+                detalles: errorCuotas.details || "",
+                hint: errorCuotas.hint || ""
+            });
+        }
+
+        // ==========================================
+        // CALCULAR SALDO
+        // ==========================================
+
+        const saldo = cuotas
+            .filter(cuota => !cuota.pagado)
+            .reduce((total, cuota) => {
+                return total + Number(cuota.importe || 0);
+            }, 0);
+
+        // ==========================================
+        // OCULTAR CONTRASEÑA
+        // ==========================================
+
+        const alumnoSeguro = { ...alumno };
+
+        delete alumnoSeguro.contraseña;
+
+        // ==========================================
+        // RESPUESTA
+        // ==========================================
+
+        res.json({
+            mensaje: "Inicio de sesión correcto.",
+            alumno: alumnoSeguro,
+            cuotas: cuotas,
+            saldo: saldo
+        });
+
+    } catch (error) {
+
+        console.error("ERROR INTERNO EN LOGIN:", error);
+
+        res.status(500).json({
+            error: "Error interno al iniciar sesión.",
             detalle: error.message
         });
     }
@@ -376,7 +535,19 @@ if (require.main === module) {
     app.listen(PORT, function () {
 
         console.log(
-            "Servidor iniciado en http://localhost:" + PORT
+            "================================="
+        );
+
+        console.log(
+            "Mi Cuenta ISPI iniciado correctamente"
+        );
+
+        console.log(
+            "Servidor: http://localhost:" + PORT
+        );
+
+        console.log(
+            "================================="
         );
 
     });
